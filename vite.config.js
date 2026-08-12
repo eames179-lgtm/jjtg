@@ -7,6 +7,7 @@ const runtimeAssets = [
   "bgm.mp3",
   "map.glb",
   "player.glb",
+  "popupsound.mp3",
   "wake_foam.png",
   "waternormals.jpg",
 ];

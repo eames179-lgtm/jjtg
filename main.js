@@ -124,12 +124,13 @@ let mapStart,
   mapSceneReady = false,
   playerStartInitialized = false;
 let playerBaseY = -2.5;
-let clock, alarmAudio, bgmAudio, sun;
+let clock, alarmAudio, bgmAudio, popupAudio, sun;
 const audioFades = new WeakMap();
 const AUDIO_LEVELS = {
   bgm: 0.34,
   bgmDucked: 0.045,
   alarm: 0.82,
+  popup: 0.83,
 };
 const AUDIO_UNLOCK_EVENTS = ["pointerdown", "keydown"];
 const triggers = new Map();
@@ -745,6 +746,11 @@ function ensureAudio() {
     alarmAudio.preload = "auto";
     alarmAudio.volume = 0;
   }
+  if (!popupAudio) {
+    popupAudio = new Audio("./popupsound.mp3");
+    popupAudio.preload = "auto";
+    popupAudio.volume = AUDIO_LEVELS.popup;
+  }
 }
 
 function bindBackgroundMusicUnlock() {
@@ -1174,8 +1180,6 @@ function collectItem(index) {
     createPickupBurst(pos);
   }
 
-  playPickupChime();
-
   if (state.itemCount === 5 && !state.completionShown) {
     state.completionShown = true;
     window.setTimeout(() => {
@@ -1239,30 +1243,13 @@ function updatePickupParticles(dt) {
   }
 }
 
-function playPickupChime() {
-  try {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) return;
-    const context =
-      playPickupChime.context ||
-      (playPickupChime.context = new AudioContextClass());
-    const gain = context.createGain();
-    const oscillator = context.createOscillator();
-    oscillator.type = "sine";
-    oscillator.frequency.setValueAtTime(520, context.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(
-      1040,
-      context.currentTime + 0.22,
-    );
-    gain.gain.setValueAtTime(0.0001, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.12, context.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.35);
-    oscillator.connect(gain).connect(context.destination);
-    oscillator.start();
-    oscillator.stop(context.currentTime + 0.36);
-  } catch {
+function playPopupSound() {
+  ensureAudio();
+  popupAudio.pause();
+  popupAudio.currentTime = 0;
+  popupAudio.play().catch(() => {
     /* Audio is an enhancement; gameplay remains functional if unavailable. */
-  }
+  });
 }
 
 function activateThreat() {
@@ -1376,6 +1363,7 @@ function showPopupDOM() {
   dom.popupPanel.focus({ preventScroll: true });
   dom.popupContent.scrollTop = 0;
   dom.popupBackdrop.classList.add("is-open");
+  playPopupSound();
 
   window.requestAnimationFrame(() => {
     dom.popupContent.scrollTop = 0;
