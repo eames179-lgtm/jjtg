@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#071a23" />
+    <title>탭 제목</title>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./node_modules/three/build/three.module.js",
+          "three/addons/": "./node_modules/three/examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="/jjtg/assets/index-Dp-GmjuI.js"></script>
+    <link rel="stylesheet" crossorigin href="/jjtg/assets/index-Wi5DS5zn.css">
+  </head>
+  <body>
+    <main id="game" aria-label="Ocean research game">
+      <canvas id="scene" aria-hidden="true"></canvas>
+
+      <section id="loading-screen" class="loading-screen">
+        <div class="loading-atmosphere" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="loading-content">
+          <div class="tutorial-guide">
+            <h2>대한민국 이지스 구축함의<br />함장이 되어보세요.<br /></h2>
+            <br />
+            <ol>
+              <li><strong>조타륜을 탭</strong> 하면 항해를 시작합니다.</li>
+              <li><strong>한번 더 탭</strong> 하면 정박합니다.</li>
+              <li><strong>조타륜을 드래그</strong> 하여 방향을 전환합니다.</li>
+            </ol>
+          </div>
+          <img
+            id="loading-helm-img"
+            class="loading-helm"
+            src="/jjtg/assets/helm-BuIoJTuI.png"
+            alt="Loading"
+            aria-hidden="true"
+            draggable="false"
+          />
+          <p id="loading-status" class="loading-status">
+            데이터를 불러오는 중 · 0%
+          </p>
+          <div
+            class="loading-track"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
+            <span id="loading-fill"></span>
+          </div>
+          <div id="loading-actions" class="loading-actions" aria-hidden="true" inert>
+            <p id="language-prompt" class="language-prompt">언어를 선택하세요</p>
+            <!-- 1. 언어 선택 버튼 2개를 하나의 상자(div)에 가지런히 모아둡니다 -->
+            <div class="language-buttons" aria-label="Language selection">
+              <button type="button" class="language-button" data-language="ko">
+                한국어 <span>KR</span>
+              </button>
+              <button type="button" class="language-button" data-language="en">
+                English <span>EN</span>
+              </button>
+            </div>
+
+            <!-- 2. 항해 시작 버튼은 언어 상자 밖으로 빼서 단독으로 둡니다 -->
+            <button
+              type="button"
+              id="start-voyage-button"
+              class="start-button"
+              disabled
+            >
+              항해 시작
+            </button>
+          </div>
+        </div>
+        <!-- loading-content 상자 닫기 -->
+        <p class="loading-foot">EXPEDITION SYSTEM / MOBILE UNIT</p>
+      </section>
+
+      <div id="hud" class="hud is-hidden" aria-hidden="true">
+        <header class="top-bar">
+          <div></div>
+          <ol
+            id="anchor-progress"
+            class="anchor-progress"
+            aria-label="확인한 연구 기록 0/5"
+          >
+            <li><img src="data:image/png;base64,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" alt="미확인 연구 기록" /></li>
+            <li><img src="data:image/png;base64,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" alt="미확인 연구 기록" /></li>
+            <li><img src="data:image/png;base64,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" alt="미확인 연구 기록" /></li>
+            <li><img src="data:image/png;base64,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" alt="미확인 연구 기록" /></li>
+            <li><img src="data:image/png;base64,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" alt="미확인 연구 기록" /></li>
+          </ol>
+          <button
+            id="language-toggle"
+            class="language-toggle"
+            type="button"
+            aria-label="Switch language"
+          >
+            EN
+          </button>
+        </header>
+
+        <div id="danger-warning" class="danger-warning is-hidden" role="alert">
+          <span class="danger-icon">!</span>
+          <div>
+            <small id="danger-code">PROXIMITY ALERT</small>
+            <strong id="danger-text">방사능 미사일이 접근하고 있습니다.</strong>
+          </div>
+        </div>
+
+        <section class="helm-controls" aria-label="Ship controls">
+          <button
+            id="emergency-button"
+            class="missile-launch is-hidden"
+            type="button"
+          >
+            <span class="missile-launch__shockwave" aria-hidden="true"></span>
+            <span class="missile-launch__scan" aria-hidden="true"></span>
+            <img src="/jjtg/assets/button-CwKqMA8y.jpg" alt="" draggable="false" />
+            <span id="emergency-label">대공 미사일 발사</span>
+          </button>
+
+          <div
+            id="helm"
+            class="helm"
+            aria-label="Steering wheel"
+            role="slider"
+            aria-valuemin="-180"
+            aria-valuemax="180"
+            aria-valuenow="0"
+            tabindex="0"
+          >
+            <div id="compass" class="compass" aria-hidden="true">
+              <div id="compass-needle" class="compass-needle"></div>
+            </div>
+            <div class="helm-ring"></div>
+            <img
+              id="helm-image"
+              src="/jjtg/assets/helm-BuIoJTuI.png"
+              alt="Ship helm"
+              draggable="false"
+            />
+            <span class="helm-center"></span>
+          </div>
+        </section>
+      </div>
+
+      <div
+        id="popup-backdrop"
+        class="popup-backdrop is-hidden"
+        aria-hidden="true"
+      >
+        <article
+          id="popup-panel"
+          class="popup-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="popup-title"
+          tabindex="-1"
+        >
+          <div id="popup-drag-handle" class="popup-drag-handle">
+            <div class="popup-grabber" aria-hidden="true"></div>
+            <header class="popup-header">
+              <div>
+                <p id="popup-kicker" class="popup-kicker"></p>
+                <h2 id="popup-title"></h2>
+              </div>
+              <span id="popup-index" class="popup-index"></span>
+            </header>
+          </div>
+          <div id="popup-content" class="popup-content">
+            <div id="popup-body" class="popup-body"></div>
+            <footer class="popup-footer">
+              <button id="popup-close" class="popup-close" type="button">
+                닫기
+              </button>
+            </footer>
+          </div>
+        </article>
+      </div>
+
+      <!--
+        콘텐츠 편집 가이드
+        각 template은 trigger 번호와 1:1로 대응합니다. 사진은 <img>, 영상은
+        <video>, 본문은 <p>를 그대로 교체하면 됩니다. 번역이 필요한 문자열은
+        data-ko / data-en 속성을 한 쌍으로 유지하세요. main.js의 applyTemplateLanguage()
+        가 현재 언어에 맞는 값을 textContent로 안전하게 반영합니다. 이미지 alt도
+        data-alt-ko / data-alt-en을 함께 사용하면 언어 전환 시 즉시 갱신됩니다.
+      -->
+      <template id="trigger-template-1">
+        <div class="feature-media">
+          <img
+            src="/jjtg/assets/popup1_1-D4Cy3956.jpg"
+            data-alt-ko="첫 번째 해양 연구 표본"
+            data-alt-en="First ocean research sample"
+          />
+        </div>
+        <h3 data-ko="반갑습니다. 함장님!" data-en="Welcome, Captain!"></h3>
+
+        <p
+          data-ko="역시 소문대로 항해술의 천재답게 나침반을 정확히 따라 첫 번째 정박지에 도착하셨군요. 언제 오시나 기다리느라 목이 빠지는 줄 알았습니다."
+          data-en="Just as the rumors said, you truly are a navigation genius—you followed the compass precisely and reached the first anchorage. I thought my neck would give out from waiting for you to arrive."
+        ></p>
+
+        <p
+          data-ko="네? 첫 항해라 너무 긴장하신 나머지 정조대왕함의 기능이 가물가물하다고요? 전혀 걱정하지 마십시오! 그런 분들이 한 두분이 아니었습니다."
+          data-en="What? You're so nervous on your first voyage that you can barely remember the features of the ROKS Jeongjo the Great? Don't worry at all! You certainly aren't the first."
+        ></p>
+
+        <br />
+
+        <h3
+          data-ko="닻⚓을 향해 항해해주세요."
+          data-en="Please sail toward the anchor ⚓."
+        ></h3>
+
+        <p
+          data-ko="닻을 찾아 정박할 때마다 과거 해외 기술에 의존하던 시절을 지나, 이제는 우리 방위사업청의 기술력으로 직접 완성한 정조대왕함의 위대한 능력들이 하나씩 기억날 것입니다."
+          data-en="Each time you find an anchor and dock, you will remember another of the remarkable capabilities of the ROKS Jeongjo the Great—built with the Defense Acquisition Program Administration's own technology after moving beyond the days of relying on foreign technology."
+        ></p>
+
+        <br />
+<video autoplay muted loop controls playsinline preload="metadata">
+  <source src="/jjtg/assets/popup1_2-FXBpgkKh.mp4" type="video/mp4" />
+  </video>
+        <h3
+          data-ko="자, 방위사업청이 완성한 최강의 이지스 구축함으로 항해를 시작해봐요!"
+          data-en="Now, let's set sail aboard the most powerful Aegis destroyer completed by the Defense Acquisition Program Administration!"
+        ></h3>
+
+
+        </video>
+        <br />
+      </template>
+
+      <template id="trigger-template-2">
+        <h3
+          data-ko="이지스 체계가 뭐냐구요?"
+          data-en="What is the Aegis system?"
+        ></h3>
+        <div class="feature-media">
+          <img
+            src="/jjtg/assets/popup2_1-BjCbr2a8.jpg"
+          />
+        </div>
+        <p
+          data-ko="'이지스'라는 이름은 그리스 신화에서 제우스가 딸 아테나에게 준 '절대 뚫리지 않는 방패'의 이름에서 따왔습니다."
+          data-en="The name 'Aegis' comes from the 'absolutely impenetrable shield' that Zeus gave his daughter Athena in Greek mythology."
+        ></p>
+        <p
+          data-ko="이름처럼 이지스 체계는 배를 공격해 오는 적의 미사일이나 비행기를 완벽하게 막아내기 위해 미국이 개발한 '최첨단 전투 두뇌'입니다."
+          data-en="True to its name, the Aegis system is a 'state-of-the-art combat brain' developed by the United States to defend ships against incoming enemy missiles and aircraft."
+          ></p>
+
+
+          <p
+          data-ko="배의 네 면에 찰싹 붙어있는 커다란 팔각형 모양의 레이더(SPY 레이더)와 아주 똑똑한 슈퍼컴퓨터, 그리고 미사일 발사대가 하나로 연결되어 움직이는 시스템을 말합니다."
+          data-en="It is a system in which the large octagonal radars (SPY radars) mounted on all four sides of the ship, a highly intelligent supercomputer, and the missile launchers are all connected and operate as one."
+        ></p>
+
+<div class="feature-media">
+          <img
+            src="/jjtg/assets/popup2_2-Pb9FPjzz.jpg"
+          />
+        </div>
+        <p
+          data-ko="과거의 군함들은 적을 찾고, 조준하고, 쏘는 과정을 사람이 일일이 확인하거나 여러 장비를 거쳐야 해서 시간이 오래 걸렸습니다. 하지만 이지스 체계가 탑재된 배(이지스함)는 차원이 다릅니다."
+          data-en="In the past, warships took a long time to find, aim at, and fire on an enemy because people had to check each step manually or work through several separate systems. Ships equipped with the Aegis system, however, are on an entirely different level."
+        ></p>
+
+        <h4
+          data-ko="수백 개의 목표물을 한 번에 봅니다"
+          data-en="It sees hundreds of targets at once."
+        ></h4>
+        <p
+          data-ko="이지스함의 거대한 레이더는 빙글빙글 돌아갈 필요 없이 사방을 동시에 감시합니다. 수백 킬로미터 밖에 있는 적 비행기나 미사일 수백 개를 동시에 찾아내고 쫓아갈 수 있습니다."
+          data-en="An Aegis destroyer's massive radar monitors every direction at once without needing to spin. It can detect and track hundreds of enemy aircraft or missiles simultaneously from hundreds of kilometers away."
+        ></p>
+
+        <h4
+          data-ko="스스로 생각하고 가장 먼저 공격합니다"
+          data-en="It thinks for itself and attacks the greatest threat first."
+        ></h4>
+        <p
+          data-ko="슈퍼컴퓨터가 날아오는 수백 개의 적 중에서 '어떤 녀석이 우리에게 가장 위험한가?'를 1초도 안 되는 시간에 계산해서 순서를 정합니다. 그리고 함대공 요격 미사일을 쏴서 가장 위험한 적부터 차례대로 박살 냅니다."
+          data-en="In less than a second, the supercomputer determines which of the hundreds of incoming enemies poses the greatest danger and sets the order of engagement. It then fires surface-to-air interceptor missiles to destroy the threats one by one, starting with the most dangerous."
+        ></p>
+
+      </template>
+
+      <template id="trigger-template-3">
+        <video autoplay muted loop controls playsinline preload="metadata">
+         <source src="/jjtg/assets/popup3_1-BJOg1wos.mp4" type="video/mp4" />
+         </video>
+        <h3
+          data-ko="요격 미사일을 발사합니다!"
+          data-en="Launching an interceptor missile!"
+        ></h3>
+
+        <p
+          data-ko="함장님, 지금은 정말 위험한 상황입니다! 우리를 향해 날아오는 적의 미사일을 공중에서 산산조각 내는 방패, 바로 '함대공 요격 미사일'을 발사한 덕분에 무사할 수 있는거죠."
+          data-en="Captain, this is a truly dangerous situation! We survived thanks to the 'surface-to-air interceptor missile'—a shield that shatters enemy missiles flying toward us in midair."
+        ></p>
+
+
+
+        <video autoplay muted loop controls playsinline preload="metadata">
+         <source src="/jjtg/assets/popup3_2-DJk20La_.mp4" type="video/mp4" />
+         </video>
+        <p
+          data-ko="방위사업청의 기술력이 집약된 정조대왕함은 적의 탄도미사일을 탐지 → 추적 → 요격까지 혼자서 완벽하게 다 해낼 수 있는 진정한 의미의 방패입니다."
+          data-en="The ROKS Jeongjo the Great, which embodies the Defense Acquisition Program Administration's advanced technology, is a shield in the truest sense, capable of flawlessly detecting → tracking → intercepting enemy ballistic missiles all on its own."
+        ></p>
+        <p
+          data-ko="게다가 이 방패는 나 혼자만 쓰는 게 아닙니다. 이지스함 한 척이 떠 있으면, 그 주변 수백 킬로미터 바다 위에 떠 있는 우리 편의 다른 군함들, 보급선, 심지어 근처 육지의 주요 시설까지 보호해 줄 수 있습니다."
+          data-en="This shield is not just for our ship. When a single Aegis destroyer is deployed, it can protect other friendly warships, supply ships, and even key facilities on nearby land across hundreds of kilometers of the surrounding sea."
+        ></p>
+
+        <h4
+          data-ko="이지스함 한 척만 있어도 그 주변은 거의 완벽하게 보호받을 수 있습니다."
+          data-en="With just one Aegis destroyer, the surrounding area can be protected almost completely."
+        ></h4>
+
+      </template>
+
+      <template id="trigger-template-4">
+        <h3
+          data-ko="근데 아까 그 미사일은 어디서 어떻게 발사됐냐고요?"
+          data-en="But where did that missile come from, and how was it launched?"
+        ></h3>
+
+
+        <p
+          data-ko="과거의 군함들은 대포나 미사일을 쏠 때 갑판 위에 있는 발사대를 빙글빙글 돌려서 적을 조준해야 했습니다."
+          data-en="In the past, warships had to rotate launchers mounted on the deck to aim at the enemy before firing guns or missiles."
+        ></p>
+        <p
+          data-ko="하지만 수직발사체계(VLS)는 미사일들을 배의 갑판 아래 네모난 방(셀, Cell)에 수직으로 세워서 보관합니다. 적이 나타나면 뚜껑만 열고 곧바로 하늘 위로 쏘아 올린 다음, 미사일 스스로 방향을 틀어 날아가게 하는 최첨단 시스템입니다."
+          data-en="The Vertical Launching System (VLS), however, stores missiles upright in square compartments called cells beneath the ship's deck. When an enemy appears, the system simply opens a hatch and launches a missile straight into the sky; the missile then changes direction on its own and flies toward its target."
+        ></p>
+
+        <div class="feature-media">
+          <img
+            src="/jjtg/assets/popup4_1-BKSjkJXz.jpg"
+          />
+        </div>
+
+        <br />
+
+        <h3
+          data-ko="우리는 수직발사체계를 직접 개발했습니다."
+          data-en="We developed our own Vertical Launching System."
+        ></h3>
+
+        <p
+          data-ko="원래 우리나라 해군은 미국의 'Mk.41'이라는 훌륭한 수직발사체계를 수입해서 썼습니다. 하지만 수입산 무기를 쓸 때는 까다로운 국제 계약 절차나 해외 기술 통제로 인해 우리 국산 무기를 마음대로 연동하거나 유지보수하기가 매우 어려웠습니다."
+          data-en="The Republic of Korea Navy originally imported and used the excellent American Mk 41 Vertical Launching System. With imported weapons, however, complex international contracting procedures and foreign technology controls made it extremely difficult to freely integrate our own weapons or perform maintenance."
+        ></p>
+
+        <p
+          data-ko=" 그래서 방위사업청은 우리 기술로 KVLS를 개발해냈고 이제는 전세계에서 가장 거대하고 강력한 최신형 KVLS-II를 최초로 정조대왕함에 탑재했습니다!"
+          data-en="That is why the Defense Acquisition Program Administration developed the KVLS using our own technology, and now the world's largest and most powerful latest-generation KVLS-II has been installed aboard the ROKS Jeongjo the Great for the first time!"
+        ></p>
+
+
+      </template>
+
+      <template id="trigger-template-5">
+        <h3
+          data-ko="무슨 소리 들리지 않아요?"
+          data-en="Don't you hear something?"
+        ></h3>
+
+        <p
+          data-ko="함장님, 우리 해역에 적 잠수함이 침투한 것으로 의심됩니다!"
+          data-en="Captain, we suspect an enemy submarine has infiltrated our waters!"
+        ></p>
+
+        <p
+          data-ko="바닷속의 잠수함을 찾는 건, 정말 '유령'을 찾는 것과 같습니다. 바닷속은 빛이 거의 통과하지 못해서 아무리 좋은 카메라나 레이더가 있어도 앞을 볼 수 없거든요"
+          data-en="Finding a submarine underwater is truly like searching for a 'ghost.' Almost no light penetrates the depths, so even the best cameras or radar cannot see what lies ahead."
+        ></p>
+
+        <p
+          data-ko="대신 소리는 물속에서 아주 멀리까지 빠르게 전달됩니다. 음파탐지기(소나, SONAR)는 박쥐가 초음파를 쏴서 먹이를 찾는 것처럼 물속으로 소리를 보낸 뒤, 그 소리가 잠수함이나 어뢰에 부딪혀 반사되어 돌아오는 메아리를 듣고 적의 위치와 거리를 알아내는 장비입니다."
+          data-en="Sound, however, travels quickly over great distances underwater. Sonar sends sound waves through the water like a bat using ultrasound to find prey, then listens for echoes reflected from submarines or torpedoes to determine the enemy's position and distance."
+        ></p>
+       <div class="feature-media">
+          <img
+            src="/jjtg/assets/popup5_1-DeER4HB1.jpg"
+          />
+        </div>
+        <h4
+          data-ko="바닷속의이 '유령' 잠수함을 잡으려면 우리도 소리를 죽여야 합니다."
+          data-en="To catch these underwater 'ghost' submarines, we must silence ourselves as well."
+        ></h4>
+        <p
+          data-ko=" 잠수함도 우릴 소리로만 찾거든요."
+          data-en="Submarines can find us only by sound, too."
+        ></p>
+
+
+        <p
+          data-ko="보통 정조대왕함 같은 거대한 구축함은 엄청난 속도를 내기 위해 전투기 엔진 같은 '가스터빈'을 돌립니다. 하지만 이 엔진은 소음이 너무 커서, 물속에 있는 적 잠수함에게 '나 여기 지나간다!'라고 광고하는 꼴이 되죠."
+          data-en="Large destroyers like the ROKS Jeongjo the Great normally run 'gas turbines,' similar to fighter jet engines, to achieve tremendous speed. But these engines are so loud that it is like announcing 'I'm passing right here!' to enemy submarines underwater."
+        ></p>
+        <p
+          data-ko="그래서 HED라는 마법의 스위치를 만들었습니다. 자동차로 치면 하이브리드 자동차가 저속에서는 조용한 전기 모터로 굴러가는 것과 똑같아요. 거대한 가스터빈 엔진이 꺼지고 전기 모터가 조용히 돌기 시작하면서 함정의 소음이 극적으로 줄어듭니다."
+          data-en="That is why we created a magic switch called HED. It works just like a hybrid car running on a quiet electric motor at low speeds. The massive gas turbine engines shut down and the electric motors begin turning quietly, dramatically reducing the ship's noise."
+        ></p>
+
+        <h4
+          data-ko=" 정조대왕함은 바다 위를 '유령'보다 조용히 이동할 수 있습니다."
+          data-en="The ROKS Jeongjo the Great can move across the sea more quietly than a 'ghost.'"
+        ></h4>
+      </template>
+
+      <template id="completion-template">
+        <h3
+          data-ko="다 기억나셨다구요?"
+          data-en="You remember everything now?"
+        ></h3>
+        <p
+          data-ko="이제 좀 정이 들려했는데! 아쉽지만 저는 이만 가보겠습니다."
+          data-en="I was just starting to get attached! It's a shame, but I must be going now."
+        ></p>
+
+        <br />
+
+        <h4
+          data-ko="다시 조타륜을 꽉 잡아주십시오. 대한민국의 찬란한 바다를 향해, 전진!"
+          data-en="Take a firm grip on the helm once again. Toward the glorious seas of the Republic of Korea—full speed ahead!"
+        ></h4>
+        <!-- 실제 배포 시 href의 Google Form 주소만 교체하세요. 새 탭 열기는 target과 rel로 유지합니다. -->
+        <a
+          class="report-link"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfccmZqWmb9qmVMGPMrOkz47DCPGA8vzl_5nVQwU3IjgEFHBg/viewform?usp=publish-editor"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-ko="버그 리포트 및 설문조사"
+          data-en="Bug Report and Survey"
+        ></a>
+      </template>
+    </main>
+    <noscript
+      >이 게임을 실행하려면 JavaScript가 필요합니다. / JavaScript is required to
+      run this game.</noscript
+    >
+  </body>
+</html>
