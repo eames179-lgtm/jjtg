@@ -12,7 +12,7 @@ const runtimeAssets = [
 ];
 
 module.exports = {
-  base: "/jjtg/",
+  base: "/",
   build: {
     outDir: "docs",
   },
