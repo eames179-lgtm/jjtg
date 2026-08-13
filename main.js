@@ -226,6 +226,7 @@ function setHelmSteering(value) {
   state.helmSteering = Boolean(value);
   controls.enabled = !state.helmSteering;
   controls.enableRotate = !state.helmSteering;
+  if (state.helmSteering) alignCameraForSteering();
 }
 
 function animate() {
@@ -287,7 +288,7 @@ function animate() {
     player.rotation.z *= 0.92;
   }
 
-  updateFollowingCamera(dt);
+  updateFollowingCamera();
   controls.update();
   water.material.uniforms.time.value += dt * 0.55;
   wakeSystem.update(player, state.currentSpeed, state.elapsed);
@@ -322,9 +323,9 @@ function updateCompass() {
   dom.compassNeedle.style.setProperty("--needle-angle", `${needleAngleDeg}deg`);
 }
 
-function updateFollowingCamera(dt) {
+function updateFollowingCamera() {
   if (state.helmSteering) {
-    followSteeringCamera(dt);
+    alignCameraForSteering();
   } else {
     cameraFollowDelta.subVectors(player.position, previousPlayerPosition);
     camera.position.add(cameraFollowDelta);
@@ -332,7 +333,7 @@ function updateFollowingCamera(dt) {
   }
 }
 
-function followSteeringCamera(dt) {
+function alignCameraForSteering() {
   if (!player) return;
   idealCameraPos
     .set(0, 35, -90)
@@ -343,8 +344,8 @@ function followSteeringCamera(dt) {
     player.position.y + 15,
     player.position.z,
   );
-  camera.position.lerp(idealCameraPos, dt * 3.0);
-  controls.target.lerp(idealTargetPos, dt * 4.0);
+  camera.position.copy(idealCameraPos);
+  controls.target.copy(idealTargetPos);
 }
 
 function checkTriggers() {
