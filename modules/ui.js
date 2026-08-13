@@ -8,6 +8,7 @@ export function createUIController({
   closePopup,
   getPlayer,
   neutralizeThreat,
+  setHelmSteering,
   setSailing,
   tryStartGame,
 }) {
@@ -224,6 +225,7 @@ export function createUIController({
             event.clientY - pointerStartY,
           ) >= TAP_MOVE_THRESHOLD;
         if (!movedBeyondTapThreshold) return;
+        setHelmSteering(true);
       }
 
       displayedWheelAngle += incremental;
@@ -245,6 +247,9 @@ export function createUIController({
       if (!cancelled && !movedBeyondTapThreshold) {
         hideHelmGuide();
         setSailing(!state.sailing);
+      }
+      if (movedBeyondTapThreshold) {
+        setHelmSteering(false);
       }
 
       let lastTime = performance.now();

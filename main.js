@@ -41,6 +41,7 @@ const ui = createUIController({
   closePopup,
   getPlayer: () => player,
   neutralizeThreat,
+  setHelmSteering,
   setSailing,
   tryStartGame,
 });
@@ -65,6 +66,7 @@ loadingManager.onError = (url) => console.error(`Could not load asset: ${url}`);
 audio.bindBackgroundMusicUnlock();
 audio.startBackgroundMusic();
 ui.bind();
+controls.addEventListener("start", enableFreeCameraFromInput);
 loadAssets();
 
 window.addEventListener("resize", () => resizeScene(camera, renderer), {
@@ -217,8 +219,31 @@ function tryStartGame() {
 
 function setSailing(value) {
   state.sailing = Boolean(value) && !state.popupOpen && !state.alarmActive;
-  controls.enableRotate = !state.sailing;
+  if (state.sailing) {
+    state.cameraFreeLook = false;
+    state.cameraReturnElapsed = 0;
+  }
+  syncCameraRotation();
   ui.updateSailingUI();
+}
+
+function setHelmSteering(value) {
+  state.helmSteering = Boolean(value);
+  if (state.helmSteering) {
+    state.cameraFreeLook = false;
+    state.cameraReturnElapsed = 0;
+  }
+  syncCameraRotation();
+}
+
+function syncCameraRotation() {
+  controls.enableRotate = !state.helmSteering;
+}
+
+function enableFreeCameraFromInput() {
+  if (!state.sailing || state.helmSteering) return;
+  state.cameraFreeLook = true;
+  state.cameraReturnElapsed = 0;
 }
 
 function animate() {
@@ -316,13 +341,26 @@ function updateCompass() {
 }
 
 function updateFollowingCamera(dt) {
-  if (state.sailing) {
-    const cameraOffset = new THREE.Vector3(0, 35, -90);
-    cameraOffset.applyQuaternion(player.quaternion);
-    idealCameraPos.copy(player.position).add(cameraOffset);
-    idealTargetPos.copy(player.position).add(new THREE.Vector3(0, 15, 0));
+  if (state.sailing && (!state.cameraFreeLook || state.helmSteering)) {
+    idealCameraPos
+      .set(0, 35, -90)
+      .applyQuaternion(player.quaternion)
+      .add(player.position);
+    idealTargetPos.set(
+      player.position.x,
+      player.position.y + 15,
+      player.position.z,
+    );
     camera.position.lerp(idealCameraPos, dt * 3.0);
     controls.target.lerp(idealTargetPos, dt * 4.0);
+
+    if (!state.helmSteering) {
+      state.cameraReturnElapsed += dt;
+      if (state.cameraReturnElapsed >= 1.2) {
+        state.cameraFreeLook = true;
+        syncCameraRotation();
+      }
+    }
   } else {
     cameraFollowDelta.subVectors(player.position, previousPlayerPosition);
     camera.position.add(cameraFollowDelta);
