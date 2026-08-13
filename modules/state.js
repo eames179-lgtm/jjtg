@@ -4,7 +4,6 @@ export const state = {
   startRequested: false,
   gameStarted: false,
   sailing: false,
-  helmSteering: false,
   popupOpen: false,
   alarmActive: false,
   itemCount: 0,

@@ -41,7 +41,6 @@ const ui = createUIController({
   closePopup,
   getPlayer: () => player,
   neutralizeThreat,
-  setHelmSteering,
   setSailing,
   tryStartGame,
 });
@@ -218,15 +217,8 @@ function tryStartGame() {
 
 function setSailing(value) {
   state.sailing = Boolean(value) && !state.popupOpen && !state.alarmActive;
-  controls.enableRotate = !state.helmSteering;
+  controls.enableRotate = !state.sailing;
   ui.updateSailingUI();
-}
-
-function setHelmSteering(value) {
-  state.helmSteering = Boolean(value);
-  controls.enabled = !state.helmSteering;
-  controls.enableRotate = !state.helmSteering;
-  if (state.helmSteering) alignCameraForSteering();
 }
 
 function animate() {
@@ -288,7 +280,7 @@ function animate() {
     player.rotation.z *= 0.92;
   }
 
-  updateFollowingCamera();
+  updateFollowingCamera(dt);
   controls.update();
   water.material.uniforms.time.value += dt * 0.55;
   wakeSystem.update(player, state.currentSpeed, state.elapsed);
@@ -323,29 +315,19 @@ function updateCompass() {
   dom.compassNeedle.style.setProperty("--needle-angle", `${needleAngleDeg}deg`);
 }
 
-function updateFollowingCamera() {
-  if (state.helmSteering) {
-    alignCameraForSteering();
+function updateFollowingCamera(dt) {
+  if (state.sailing) {
+    const cameraOffset = new THREE.Vector3(0, 35, -90);
+    cameraOffset.applyQuaternion(player.quaternion);
+    idealCameraPos.copy(player.position).add(cameraOffset);
+    idealTargetPos.copy(player.position).add(new THREE.Vector3(0, 15, 0));
+    camera.position.lerp(idealCameraPos, dt * 3.0);
+    controls.target.lerp(idealTargetPos, dt * 4.0);
   } else {
     cameraFollowDelta.subVectors(player.position, previousPlayerPosition);
     camera.position.add(cameraFollowDelta);
     controls.target.add(cameraFollowDelta);
   }
-}
-
-function alignCameraForSteering() {
-  if (!player) return;
-  idealCameraPos
-    .set(0, 35, -90)
-    .applyQuaternion(player.quaternion)
-    .add(player.position);
-  idealTargetPos.set(
-    player.position.x,
-    player.position.y + 15,
-    player.position.z,
-  );
-  camera.position.copy(idealCameraPos);
-  controls.target.copy(idealTargetPos);
 }
 
 function checkTriggers() {
