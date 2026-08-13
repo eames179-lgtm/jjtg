@@ -17,8 +17,8 @@
         }
       }
     </script>
-    <script type="module" crossorigin src="/assets/index-D03IZpnY.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Wi5DS5zn.css">
+    <script type="module" crossorigin src="/assets/index-D3xGaIZ5.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DgrvZ2GZ.css">
   </head>
   <body>
     <main id="game" aria-label="Ocean research game">
@@ -30,13 +30,11 @@
         </div>
         <div class="loading-content">
           <div class="tutorial-guide">
-            <h2>대한민국 이지스 구축함의<br />함장이 되어보세요.<br /></h2>
+            <h2>대한민국 이지스 구축함의<br />함장으로 임명합니다.<br /></h2>
             <br />
-            <ol>
-              <li><strong>조타륜을 탭</strong> 하면 항해를 시작합니다.</li>
-              <li><strong>한번 더 탭</strong> 하면 정박합니다.</li>
-              <li><strong>조타륜을 드래그</strong> 하여 방향을 전환합니다.</li>
-            </ol>
+            <h4>
+            아래의 조타륜을 회전시켜보세요
+            </h4>
           </div>
           <img
             id="loading-helm-img"
@@ -59,7 +57,7 @@
             <span id="loading-fill"></span>
           </div>
           <div id="loading-actions" class="loading-actions" aria-hidden="true" inert>
-            <p id="language-prompt" class="language-prompt">언어를 선택하세요</p>
+            <br />
             <!-- 1. 언어 선택 버튼 2개를 하나의 상자(div)에 가지런히 모아둡니다 -->
             <div class="language-buttons" aria-label="Language selection">
               <button type="button" class="language-button" data-language="ko">
@@ -192,7 +190,7 @@
         콘텐츠 편집 가이드
         각 template은 trigger 번호와 1:1로 대응합니다. 사진은 <img>, 영상은
         <video>, 본문은 <p>를 그대로 교체하면 됩니다. 번역이 필요한 문자열은
-        data-ko / data-en 속성을 한 쌍으로 유지하세요. main.js의 applyTemplateLanguage()
+        data-ko / data-en 속성을 한 쌍으로 유지하세요. modules/ui.js의 applyTemplateLanguage()
         가 현재 언어에 맞는 값을 textContent로 안전하게 반영합니다. 이미지 alt도
         data-alt-ko / data-alt-en을 함께 사용하면 언어 전환 시 즉시 갱신됩니다.
       -->
@@ -233,7 +231,7 @@
   <source src="/assets/popup1_2-FXBpgkKh.mp4" type="video/mp4" />
   </video>
         <h3
-          data-ko="자, 방위사업청이 완성한 최강의 이지스 구축함으로 항해를 시작해봐요!"
+          data-ko="방위사업청이 완성한 최강의 이지스 구축함 '정조대왕함'으로 항해를 시작해봐요!"
           data-en="Now, let's set sail aboard the most powerful Aegis destroyer completed by the Defense Acquisition Program Administration!"
         ></h3>
 
@@ -277,19 +275,19 @@
           data-en="In the past, warships took a long time to find, aim at, and fire on an enemy because people had to check each step manually or work through several separate systems. Ships equipped with the Aegis system, however, are on an entirely different level."
         ></p>
 
-        <h4
+        <h3
           data-ko="수백 개의 목표물을 한 번에 봅니다"
           data-en="It sees hundreds of targets at once."
-        ></h4>
+        ></h3>
         <p
           data-ko="이지스함의 거대한 레이더는 빙글빙글 돌아갈 필요 없이 사방을 동시에 감시합니다. 수백 킬로미터 밖에 있는 적 비행기나 미사일 수백 개를 동시에 찾아내고 쫓아갈 수 있습니다."
           data-en="An Aegis destroyer's massive radar monitors every direction at once without needing to spin. It can detect and track hundreds of enemy aircraft or missiles simultaneously from hundreds of kilometers away."
         ></p>
 
-        <h4
+        <h3
           data-ko="스스로 생각하고 가장 먼저 공격합니다"
           data-en="It thinks for itself and attacks the greatest threat first."
-        ></h4>
+        ></h3>
         <p
           data-ko="슈퍼컴퓨터가 날아오는 수백 개의 적 중에서 '어떤 녀석이 우리에게 가장 위험한가?'를 1초도 안 되는 시간에 계산해서 순서를 정합니다. 그리고 함대공 요격 미사일을 쏴서 가장 위험한 적부터 차례대로 박살 냅니다."
           data-en="In less than a second, the supercomputer determines which of the hundreds of incoming enemies poses the greatest danger and sets the order of engagement. It then fires surface-to-air interceptor missiles to destroy the threats one by one, starting with the most dangerous."
@@ -320,15 +318,14 @@
           data-ko="방위사업청의 기술력이 집약된 정조대왕함은 적의 탄도미사일을 탐지 → 추적 → 요격까지 혼자서 완벽하게 다 해낼 수 있는 진정한 의미의 방패입니다."
           data-en="The ROKS Jeongjo the Great, which embodies the Defense Acquisition Program Administration's advanced technology, is a shield in the truest sense, capable of flawlessly detecting → tracking → intercepting enemy ballistic missiles all on its own."
         ></p>
+        <h3
+          data-ko="정조대왕함 한 척만 있어도 그 주변은 안전합니다."
+          data-en="With just one Aegis destroyer, the surrounding area can be protected almost completely."
+        ></h3>
         <p
           data-ko="게다가 이 방패는 나 혼자만 쓰는 게 아닙니다. 이지스함 한 척이 떠 있으면, 그 주변 수백 킬로미터 바다 위에 떠 있는 우리 편의 다른 군함들, 보급선, 심지어 근처 육지의 주요 시설까지 보호해 줄 수 있습니다."
           data-en="This shield is not just for our ship. When a single Aegis destroyer is deployed, it can protect other friendly warships, supply ships, and even key facilities on nearby land across hundreds of kilometers of the surrounding sea."
         ></p>
-
-        <h4
-          data-ko="이지스함 한 척만 있어도 그 주변은 거의 완벽하게 보호받을 수 있습니다."
-          data-en="With just one Aegis destroyer, the surrounding area can be protected almost completely."
-        ></h4>
 
       </template>
 
@@ -391,7 +388,7 @@
         ></p>
 
         <p
-          data-ko="대신 소리는 물속에서 아주 멀리까지 빠르게 전달됩니다. 음파탐지기(소나, SONAR)는 박쥐가 초음파를 쏴서 먹이를 찾는 것처럼 물속으로 소리를 보낸 뒤, 그 소리가 잠수함이나 어뢰에 부딪혀 반사되어 돌아오는 메아리를 듣고 적의 위치와 거리를 알아내는 장비입니다."
+          data-ko="대신 소리는 물속에서 아주 멀리까지 빠르게 전달됩니다. 그래서 음파탐지기(소나, SONAR)를 사용하는데요, 박쥐가 초음파를 쏴서 먹이를 찾는 것처럼 물속으로 소리를 보낸 뒤, 그 소리가 잠수함이나 어뢰에 부딪혀 반사되어 돌아오는 메아리를 듣고 적의 위치와 거리를 알아내는 장비입니다."
           data-en="Sound, however, travels quickly over great distances underwater. Sonar sends sound waves through the water like a bat using ultrasound to find prey, then listens for echoes reflected from submarines or torpedoes to determine the enemy's position and distance."
         ></p>
        <div class="feature-media">
@@ -399,12 +396,12 @@
             src="/assets/popup5_1-DeER4HB1.jpg"
           />
         </div>
-        <h4
-          data-ko="바닷속의이 '유령' 잠수함을 잡으려면 우리도 소리를 죽여야 합니다."
+        <h3
+          data-ko="'바닷속의 유령' 잠수함을 잡으려면 우리도 소리를 죽여야 합니다."
           data-en="To catch these underwater 'ghost' submarines, we must silence ourselves as well."
-        ></h4>
+        ></h3>
         <p
-          data-ko=" 잠수함도 우릴 소리로만 찾거든요."
+          data-ko=" 잠수함도 우릴 음파탐지기(SONAR)를 이용해 소리로 찾거든요."
           data-en="Submarines can find us only by sound, too."
         ></p>
 
@@ -413,31 +410,32 @@
           data-ko="보통 정조대왕함 같은 거대한 구축함은 엄청난 속도를 내기 위해 전투기 엔진 같은 '가스터빈'을 돌립니다. 하지만 이 엔진은 소음이 너무 커서, 물속에 있는 적 잠수함에게 '나 여기 지나간다!'라고 광고하는 꼴이 되죠."
           data-en="Large destroyers like the ROKS Jeongjo the Great normally run 'gas turbines,' similar to fighter jet engines, to achieve tremendous speed. But these engines are so loud that it is like announcing 'I'm passing right here!' to enemy submarines underwater."
         ></p>
+                <h3
+          data-ko=" 정조대왕함은 바다 위를 유령보다 조용히 이동할 수 있습니다."
+          data-en="The ROKS Jeongjo the Great can move across the sea more quietly than a 'ghost.'"
+        ></h3>
         <p
           data-ko="그래서 HED라는 마법의 스위치를 만들었습니다. 자동차로 치면 하이브리드 자동차가 저속에서는 조용한 전기 모터로 굴러가는 것과 똑같아요. 거대한 가스터빈 엔진이 꺼지고 전기 모터가 조용히 돌기 시작하면서 함정의 소음이 극적으로 줄어듭니다."
           data-en="That is why we created a magic switch called HED. It works just like a hybrid car running on a quiet electric motor at low speeds. The massive gas turbine engines shut down and the electric motors begin turning quietly, dramatically reducing the ship's noise."
         ></p>
 
-        <h4
-          data-ko=" 정조대왕함은 바다 위를 '유령'보다 조용히 이동할 수 있습니다."
-          data-en="The ROKS Jeongjo the Great can move across the sea more quietly than a 'ghost.'"
-        ></h4>
+
       </template>
 
       <template id="completion-template">
         <h3
-          data-ko="다 기억나셨다구요?"
+          data-ko="기억이 전부 돌아오셨다고요?"
           data-en="You remember everything now?"
         ></h3>
         <p
-          data-ko="이제 좀 정이 들려했는데! 아쉽지만 저는 이만 가보겠습니다."
+          data-ko="역시 잠깐 깜빡하신 것이었군요. 간만에 아는 것들 설명하느라 시간 가는 줄 몰랐는데!"
           data-en="I was just starting to get attached! It's a shame, but I must be going now."
         ></p>
 
         <br />
 
         <h4
-          data-ko="다시 조타륜을 꽉 잡아주십시오. 대한민국의 찬란한 바다를 향해, 전진!"
+          data-ko="다시 조타륜을 꽉 잡아주세요. 대한민국의 찬란한 바다를 향해, 전진!"
           data-en="Take a firm grip on the helm once again. Toward the glorious seas of the Republic of Korea—full speed ahead!"
         ></h4>
         <!-- 실제 배포 시 href의 Google Form 주소만 교체하세요. 새 탭 열기는 target과 rel로 유지합니다. -->
@@ -446,7 +444,7 @@
           href="https://docs.google.com/forms/d/e/1FAIpQLSfccmZqWmb9qmVMGPMrOkz47DCPGA8vzl_5nVQwU3IjgEFHBg/viewform?usp=publish-editor"
           target="_blank"
           rel="noopener noreferrer"
-          data-ko="버그 리포트 및 설문조사"
+          data-ko="버그 리포트, 설문조사"
           data-en="Bug Report and Survey"
         ></a>
       </template>

@@ -4,10 +4,14 @@
   "private": true,
   "description": "Mobile-first Three.js ocean research game",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "vite build"
   },
   "dependencies": {
     "gsap": "^3.15.0",
     "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "vite": "^8.2.1"
   }
 }
