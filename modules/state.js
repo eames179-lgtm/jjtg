@@ -1,0 +1,18 @@
+export const state = {
+  language: null,
+  assetsReady: false,
+  startRequested: false,
+  gameStarted: false,
+  sailing: false,
+  popupOpen: false,
+  alarmActive: false,
+  itemCount: 0,
+  elapsed: 0,
+  completionShown: false,
+  completionPending: false,
+  collected: new Set(),
+  openedTriggerPopups: new Set(),
+  handledTriggers: new Set(),
+  triggerInside: new Set(),
+  currentSpeed: 0,
+};

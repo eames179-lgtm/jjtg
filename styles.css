@@ -216,11 +216,6 @@ button {
     transform 0.35s ease 0.12s,
     visibility 0s;
 }
-.language-prompt {
-  margin: 26px 0 12px;
-  color: rgba(239, 247, 255, 0.7);
-  font-size: 13px;
-}
 .language-buttons {
   display: grid;
   grid-template-columns: 1fr 1fr;
