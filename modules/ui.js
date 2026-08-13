@@ -11,6 +11,10 @@ export function createUIController({
   setSailing,
   tryStartGame,
 }) {
+  let activeHelmGuide = null;
+  let helmGuideTimer = null;
+  let stopGuideShown = false;
+
   function bind() {
     document
       .querySelectorAll(".language-button")
@@ -137,6 +141,9 @@ export function createUIController({
     dom.dangerText.textContent = text.danger;
     dom.emergencyLabel.textContent = text.emergency;
     dom.languageToggle.textContent = state.language === "ko" ? "EN" : "KR";
+    if (activeHelmGuide) {
+      dom.helmGuideText.textContent = text[activeHelmGuide];
+    }
     updateSailingUI();
     if (!state.assetsReady) {
       dom.loadingStatus.textContent = text.loading(
@@ -236,6 +243,7 @@ export function createUIController({
       }
 
       if (!cancelled && !movedBeyondTapThreshold) {
+        hideHelmGuide();
         setSailing(!state.sailing);
       }
 
@@ -273,8 +281,40 @@ export function createUIController({
     dom.helm.addEventListener("keydown", (event) => {
       if (event.key !== "Enter" && event.key !== " ") return;
       event.preventDefault();
+      hideHelmGuide();
       setSailing(!state.sailing);
     });
+  }
+
+  function showHelmGuide(messageKey, tone, duration = 0) {
+    window.clearTimeout(helmGuideTimer);
+    activeHelmGuide = messageKey;
+    dom.helmGuideText.textContent = copy[state.language][messageKey];
+    dom.helmGuideDot.dataset.tone = tone;
+    dom.helmGuide.classList.add("is-visible");
+    dom.helmGuide.setAttribute("aria-hidden", "false");
+
+    if (duration > 0) {
+      helmGuideTimer = window.setTimeout(hideHelmGuide, duration);
+    }
+  }
+
+  function hideHelmGuide() {
+    window.clearTimeout(helmGuideTimer);
+    helmGuideTimer = null;
+    activeHelmGuide = null;
+    dom.helmGuide.classList.remove("is-visible");
+    dom.helmGuide.setAttribute("aria-hidden", "true");
+  }
+
+  function showStartGuide() {
+    showHelmGuide("helmGuideStart", "red");
+  }
+
+  function showStopGuide() {
+    if (stopGuideShown) return;
+    stopGuideShown = true;
+    showHelmGuide("helmGuideStop", "blue", 3000);
   }
 
   function updateSailingUI() {
@@ -358,5 +398,12 @@ export function createUIController({
     });
   }
 
-  return { applyTemplateLanguage, bind, showPopup, updateSailingUI };
+  return {
+    applyTemplateLanguage,
+    bind,
+    showPopup,
+    showStartGuide,
+    showStopGuide,
+    updateSailingUI,
+  };
 }

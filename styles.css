@@ -397,6 +397,59 @@ button {
   box-shadow: 0 0 0 3px rgba(43, 142, 230, 0.22);
 }
 
+.helm-guide {
+  position: absolute;
+  left: 50%;
+  bottom: calc(174px + var(--safe-bottom));
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 11px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.68);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 7px);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    visibility 0s linear 0.22s;
+}
+.helm-guide.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition-delay: 0s;
+}
+.helm-guide__dot {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 0 3px rgba(255, 104, 70, 0.18);
+}
+.helm-guide__dot[data-tone="blue"] {
+  background: #2b8ee6;
+  box-shadow: 0 0 0 3px rgba(43, 142, 230, 0.22);
+}
+.helm-guide p {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  text-align: center;
+  text-wrap: balance;
+}
+
 .helm-controls {
   position: absolute;
   left: 50%;
@@ -1066,6 +1119,9 @@ noscript {
   .helm {
     width: 160px;
     height: 160px;
+  }
+  .helm-guide {
+    bottom: calc(196px + var(--safe-bottom));
   }
 }
 

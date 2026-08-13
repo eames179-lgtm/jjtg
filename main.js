@@ -210,6 +210,7 @@ function tryStartGame() {
     () => dom.loading.classList.add("is-hidden"),
     { once: true },
   );
+  ui.showStartGuide();
   clock.start();
   renderer.setAnimationLoop(animate);
 }
@@ -234,6 +235,10 @@ function animate() {
     targetSpeed,
     dt * 2.0,
   );
+
+  if (state.sailing && state.currentSpeed > 0.05) {
+    ui.showStopGuide();
+  }
 
   if (state.currentSpeed > 0.05) {
     playerForward
