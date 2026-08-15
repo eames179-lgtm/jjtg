@@ -2,6 +2,9 @@ export const $ = (selector) => document.querySelector(selector);
 
 export const dom = {
   canvas: $("#scene"),
+  opening: $("#opening-screen"),
+  openingVideo: $("#opening-video"),
+  openingSkip: $("#opening-skip"),
   loading: $("#loading-screen"),
   loadingStatus: $("#loading-status"),
   loadingFill: $("#loading-fill"),

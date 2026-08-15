@@ -24,6 +24,8 @@ let mapStart;
 let mapSceneReady = false;
 let playerStartInitialized = false;
 let playerBaseY = -2.5;
+let openingStarted = false;
+let openingFinished = false;
 
 const triggers = new Map();
 const colliders = [];
@@ -66,6 +68,7 @@ loadingManager.onError = (url) => console.error(`Could not load asset: ${url}`);
 audio.bindBackgroundMusicUnlock();
 audio.startBackgroundMusic();
 ui.bind();
+dom.openingSkip.addEventListener("click", finishOpeningSequence);
 controls.addEventListener("start", enableFreeCameraFromInput);
 loadAssets();
 
@@ -195,15 +198,23 @@ function tryStartGame() {
     !state.language ||
     !state.startRequested ||
     state.gameStarted ||
+    openingStarted ||
     !player ||
     !triggers.size
   ) {
     return;
   }
 
-  state.gameStarted = true;
-  dom.hud.classList.remove("is-hidden");
-  dom.hud.setAttribute("aria-hidden", "false");
+  openingStarted = true;
+  startOpeningSequence();
+}
+
+function startOpeningSequence() {
+  dom.opening.classList.remove("is-hidden", "is-leaving");
+  dom.opening.inert = false;
+  dom.opening.setAttribute("aria-hidden", "false");
+  dom.openingSkip.disabled = false;
+
   dom.loading.inert = true;
   dom.loading.setAttribute("aria-hidden", "true");
   dom.loading.classList.add("is-complete");
@@ -212,9 +223,56 @@ function tryStartGame() {
     () => dom.loading.classList.add("is-hidden"),
     { once: true },
   );
+
+  dom.openingVideo.currentTime = 0;
+  dom.openingVideo.addEventListener("ended", finishOpeningSequence, {
+    once: true,
+  });
+  dom.openingVideo.addEventListener("error", finishOpeningSequence, {
+    once: true,
+  });
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (!openingFinished) {
+        dom.openingVideo.classList.add("is-visible");
+        dom.openingSkip.classList.add("is-visible");
+      }
+    });
+  });
+
+  const playback = dom.openingVideo.play();
+  playback?.catch((error) => {
+    console.warn("Opening video could not be played:", error);
+    finishOpeningSequence();
+  });
+}
+
+function finishOpeningSequence() {
+  if (openingFinished) return;
+  openingFinished = true;
+  dom.openingVideo.classList.remove("is-visible");
+  dom.openingSkip.classList.remove("is-visible");
+  dom.openingSkip.disabled = true;
+
+  window.setTimeout(enterGame, 750);
+}
+
+function enterGame() {
+  state.gameStarted = true;
+  dom.hud.classList.remove("is-hidden");
+  dom.hud.setAttribute("aria-hidden", "false");
   ui.showStartGuide();
   clock.start();
   renderer.setAnimationLoop(animate);
+
+  dom.opening.inert = true;
+  dom.opening.setAttribute("aria-hidden", "true");
+  dom.opening.classList.add("is-leaving");
+  window.setTimeout(() => {
+    dom.openingVideo.pause();
+    dom.opening.classList.add("is-hidden");
+  }, 800);
 }
 
 function setSailing(value) {

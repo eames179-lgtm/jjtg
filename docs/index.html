@@ -17,12 +17,36 @@
         }
       }
     </script>
-    <script type="module" crossorigin src="/assets/index-N-K35NMf.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DY_lnOQA.css">
+    <script type="module" crossorigin src="/assets/index-D-8j6goy.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-EN1tleM7.css">
   </head>
   <body>
     <main id="game" aria-label="Ocean research game">
       <canvas id="scene" aria-hidden="true"></canvas>
+
+      <section
+        id="opening-screen"
+        class="opening-screen is-hidden"
+        aria-hidden="true"
+        inert
+      >
+        <video id="opening-video" playsinline preload="auto">
+          <source src="/assets/opening-CcQyhuu3.mp4" type="video/mp4" />
+        </video>
+        <button
+          id="opening-skip"
+          class="opening-skip"
+          type="button"
+          aria-label="오프닝 영상 건너뛰기"
+          title="영상 건너뛰기"
+          disabled
+        >
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M5 8.5 14.5 16 5 23.5V8.5Zm10.5 0L25 16l-9.5 7.5V8.5Z" />
+            <path d="M26 8.5h2v15h-2z" />
+          </svg>
+        </button>
+      </section>
 
       <section id="loading-screen" class="loading-screen">
         <div class="loading-atmosphere" aria-hidden="true">
@@ -213,7 +237,7 @@
             data-alt-en="First ocean research sample"
           />
         </div>
-        <h3 data-ko="반갑습니다. 함장님!" data-en="Welcome, Captain!"></h3>
+        <h3 data-ko="처음 뵙겠습니다. 함장님!" data-en="Welcome, Captain!"></h3>
 
         <p
           data-ko="역시 소문대로 항해술의 천재답게 나침반을 정확히 따라 첫 번째 정박지에 도착하셨군요. 언제 오시나 기다리느라 목이 빠지는 줄 알았습니다."
@@ -242,7 +266,7 @@
   <source src="/assets/popup1_2-FXBpgkKh.mp4" type="video/mp4" />
   </video>
         <h3
-          data-ko="방위사업청이 완성한 최강의 이지스 구축함 '정조대왕함'으로 항해를 시작해봐요!"
+          data-ko="방위사업청이 완성한 최강의 이지스 구축함 '정조대왕함'으로 항해를 시작해보세요."
           data-en="Now, let's set sail aboard the most powerful Aegis destroyer completed by the Defense Acquisition Program Administration!"
         ></h3>
 
@@ -269,7 +293,9 @@
           data-ko="이름처럼 이지스 체계는 배를 공격해 오는 적의 미사일이나 비행기를 완벽하게 막아내기 위해 미국이 개발한 '최첨단 전투 두뇌'입니다."
           data-en="True to its name, the Aegis system is a 'state-of-the-art combat brain' developed by the United States to defend ships against incoming enemy missiles and aircraft."
           ></p>
-
+<video autoplay muted loop controls playsinline preload="metadata">
+  <source src="/assets/popup2_2.mp4" type="video/mp4" />
+  </video>
 
           <p
           data-ko="배의 네 면에 찰싹 붙어있는 커다란 팔각형 모양의 레이더(SPY 레이더)와 아주 똑똑한 슈퍼컴퓨터, 그리고 미사일 발사대가 하나로 연결되어 움직이는 시스템을 말합니다."
