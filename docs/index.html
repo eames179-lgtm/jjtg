@@ -17,7 +17,7 @@
         }
       }
     </script>
-    <script type="module" crossorigin src="/assets/index-D-8j6goy.js"></script>
+    <script type="module" crossorigin src="/assets/index-CYKhI23F.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-EN1tleM7.css">
   </head>
   <body>
@@ -56,9 +56,7 @@
           <div class="tutorial-guide">
             <h2>대한민국 이지스 구축함의<br />함장으로 임명합니다.<br /></h2>
             <br />
-            <h4>
-            아래의 조타륜을 회전시켜보세요
-            </h4>
+            <h4>아래의 조타륜을 회전시켜보세요</h4>
           </div>
           <img
             id="loading-helm-img"
@@ -80,7 +78,12 @@
           >
             <span id="loading-fill"></span>
           </div>
-          <div id="loading-actions" class="loading-actions" aria-hidden="true" inert>
+          <div
+            id="loading-actions"
+            class="loading-actions"
+            aria-hidden="true"
+            inert
+          >
             <br />
             <!-- 1. 언어 선택 버튼 2개를 하나의 상자(div)에 가지런히 모아둡니다 -->
             <div class="language-buttons" aria-label="Language selection">
@@ -135,7 +138,7 @@
           <span class="danger-icon">!</span>
           <div>
             <small id="danger-code">PROXIMITY ALERT</small>
-            <strong id="danger-text">방사능 미사일이 접근하고 있습니다.</strong>
+            <strong id="danger-text">대함 미사일이 접근하고 있습니다.</strong>
           </div>
         </div>
 
@@ -146,7 +149,11 @@
           aria-live="polite"
           aria-hidden="true"
         >
-          <span id="helm-guide-dot" class="helm-guide__dot" aria-hidden="true"></span>
+          <span
+            id="helm-guide-dot"
+            class="helm-guide__dot"
+            aria-hidden="true"
+          ></span>
           <p id="helm-guide-text"></p>
         </div>
 
@@ -230,48 +237,28 @@
         data-alt-ko / data-alt-en을 함께 사용하면 언어 전환 시 즉시 갱신됩니다.
       -->
       <template id="trigger-template-1">
+        <h3 data-ko="반갑습니다. 함장님!" data-en="Welcome, Captain!"></h3>
         <div class="feature-media">
-          <img
-            src="/assets/popup1_1-D4Cy3956.jpg"
-            data-alt-ko="첫 번째 해양 연구 표본"
-            data-alt-en="First ocean research sample"
-          />
+          <img src="/assets/popup1_1-D4Cy3956.jpg" />
         </div>
-        <h3 data-ko="처음 뵙겠습니다. 함장님!" data-en="Welcome, Captain!"></h3>
-
         <p
-          data-ko="역시 소문대로 항해술의 천재답게 나침반을 정확히 따라 첫 번째 정박지에 도착하셨군요. 언제 오시나 기다리느라 목이 빠지는 줄 알았습니다."
-          data-en="Just as the rumors said, you truly are a navigation genius—you followed the compass precisely and reached the first anchorage. I thought my neck would give out from waiting for you to arrive."
-        ></p>
-
-        <p
-          data-ko="네? 첫 항해라 너무 긴장하신 나머지 정조대왕함의 기능이 가물가물하다고요? 전혀 걱정하지 마십시오! 그런 분들이 한 두분이 아니었습니다."
+          data-ko="방위사업청이 벼려낸 바다의 군주이자 강철의 성채, 정조대왕함을 함장님께 소개시켜드릴 기회를 갖게되어 진심으로 영광입니다! "
           data-en="What? You're so nervous on your first voyage that you can barely remember the features of the ROKS Jeongjo the Great? Don't worry at all! You certainly aren't the first."
         ></p>
 
         <br />
 
         <h3
-          data-ko="닻⚓을 향해 항해해주세요."
+          data-ko="닻⚓을 찾아 항해해주세요."
           data-en="Please sail toward the anchor ⚓."
         ></h3>
-
+        <video autoplay muted loop controls playsinline preload="metadata">
+          <source src="/assets/popup1_2-FXBpgkKh.mp4" type="video/mp4" />
+        </video>
         <p
-          data-ko="닻을 찾아 정박할 때마다 과거 해외 기술에 의존하던 시절을 지나, 이제는 우리 방위사업청의 기술력으로 직접 완성한 정조대왕함의 위대한 능력들이 하나씩 기억날 것입니다."
+          data-ko="닻을 따라 정박할 때마다 우리 대한민국의 기술력으로 직접 완성한 정조대왕함의 위대한 능력들을 하나둘씩 설명드리겠습니다."
           data-en="Each time you find an anchor and dock, you will remember another of the remarkable capabilities of the ROKS Jeongjo the Great—built with the Defense Acquisition Program Administration's own technology after moving beyond the days of relying on foreign technology."
         ></p>
-
-        <br />
-<video autoplay muted loop controls playsinline preload="metadata">
-  <source src="/assets/popup1_2-FXBpgkKh.mp4" type="video/mp4" />
-  </video>
-        <h3
-          data-ko="방위사업청이 완성한 최강의 이지스 구축함 '정조대왕함'으로 항해를 시작해보세요."
-          data-en="Now, let's set sail aboard the most powerful Aegis destroyer completed by the Defense Acquisition Program Administration!"
-        ></h3>
-
-
-        </video>
         <br />
       </template>
 
@@ -281,76 +268,56 @@
           data-en="What is the Aegis system?"
         ></h3>
         <div class="feature-media">
-          <img
-            src="/assets/popup2_1-BjCbr2a8.jpg"
-          />
+          <img src="/assets/popup2_1-PvNRf1w2.jpg" />
         </div>
         <p
           data-ko="'이지스'라는 이름은 그리스 신화에서 제우스가 딸 아테나에게 준 '절대 뚫리지 않는 방패'의 이름에서 따왔습니다."
           data-en="The name 'Aegis' comes from the 'absolutely impenetrable shield' that Zeus gave his daughter Athena in Greek mythology."
         ></p>
+        <video autoplay muted loop controls playsinline preload="metadata">
+          <source src="/assets/popup2_2-BN61wisg.mp4" type="video/mp4" />
+        </video>
         <p
           data-ko="이름처럼 이지스 체계는 배를 공격해 오는 적의 미사일이나 비행기를 완벽하게 막아내기 위해 미국이 개발한 '최첨단 전투 두뇌'입니다."
           data-en="True to its name, the Aegis system is a 'state-of-the-art combat brain' developed by the United States to defend ships against incoming enemy missiles and aircraft."
-          ></p>
-<video autoplay muted loop controls playsinline preload="metadata">
-  <source src="/assets/popup2_2.mp4" type="video/mp4" />
-  </video>
+        ></p>
+        <div class="feature-media">
+          <img src="/assets/popup2_2-Pb9FPjzz.jpg" />
+        </div>
 
-          <p
+        <p
           data-ko="배의 네 면에 찰싹 붙어있는 커다란 팔각형 모양의 레이더(SPY 레이더)와 아주 똑똑한 슈퍼컴퓨터, 그리고 미사일 발사대가 하나로 연결되어 움직이는 시스템을 말합니다."
           data-en="It is a system in which the large octagonal radars (SPY radars) mounted on all four sides of the ship, a highly intelligent supercomputer, and the missile launchers are all connected and operate as one."
-        ></p>
-
-<div class="feature-media">
-          <img
-            src="/assets/popup2_2-Pb9FPjzz.jpg"
-          />
-        </div>
-        <p
-          data-ko="과거의 군함들은 적을 찾고, 조준하고, 쏘는 과정을 사람이 일일이 확인하거나 여러 장비를 거쳐야 해서 시간이 오래 걸렸습니다. 하지만 이지스 체계가 탑재된 배(이지스함)는 차원이 다릅니다."
-          data-en="In the past, warships took a long time to find, aim at, and fire on an enemy because people had to check each step manually or work through several separate systems. Ships equipped with the Aegis system, however, are on an entirely different level."
         ></p>
 
         <h3
           data-ko="수백 개의 목표물을 한 번에 봅니다"
           data-en="It sees hundreds of targets at once."
         ></h3>
+        <video autoplay muted loop controls playsinline preload="metadata">
+          <source src="/assets/popup2_4-BfZy8jqW.mp4" type="video/mp4" />
+        </video>
         <p
           data-ko="이지스함의 거대한 레이더는 빙글빙글 돌아갈 필요 없이 사방을 동시에 감시합니다. 수백 킬로미터 밖에 있는 적 비행기나 미사일 수백 개를 동시에 찾아내고 쫓아갈 수 있습니다."
           data-en="An Aegis destroyer's massive radar monitors every direction at once without needing to spin. It can detect and track hundreds of enemy aircraft or missiles simultaneously from hundreds of kilometers away."
         ></p>
-
-        <h3
-          data-ko="스스로 생각하고 가장 먼저 공격합니다"
-          data-en="It thinks for itself and attacks the greatest threat first."
-        ></h3>
-        <p
-          data-ko="슈퍼컴퓨터가 날아오는 수백 개의 적 중에서 '어떤 녀석이 우리에게 가장 위험한가?'를 1초도 안 되는 시간에 계산해서 순서를 정합니다. 그리고 함대공 요격 미사일을 쏴서 가장 위험한 적부터 차례대로 박살 냅니다."
-          data-en="In less than a second, the supercomputer determines which of the hundreds of incoming enemies poses the greatest danger and sets the order of engagement. It then fires surface-to-air interceptor missiles to destroy the threats one by one, starting with the most dangerous."
-        ></p>
-
       </template>
 
       <template id="trigger-template-3">
-        <video autoplay muted loop controls playsinline preload="metadata">
-         <source src="/assets/popup3_1-BJOg1wos.mp4" type="video/mp4" />
-         </video>
         <h3
           data-ko="요격 미사일을 발사합니다!"
           data-en="Launching an interceptor missile!"
         ></h3>
-
+        <video autoplay muted loop controls playsinline preload="metadata">
+          <source src="/assets/popup3_1-BJOg1wos.mp4" type="video/mp4" />
+        </video>
         <p
-          data-ko="함장님, 지금은 정말 위험한 상황입니다! 우리를 향해 날아오는 적의 미사일을 공중에서 산산조각 내는 방패, 바로 '함대공 요격 미사일'을 발사한 덕분에 무사할 수 있는거죠."
+          data-ko="정말 위험한 상황이었습니다! 우리를 향해 날아오는 적의 미사일을 공중에서 산산조각 내는 방패, 바로 '함대공 요격 미사일'을 발사한 덕분에 무사할 수 있는거죠."
           data-en="Captain, this is a truly dangerous situation! We survived thanks to the 'surface-to-air interceptor missile'—a shield that shatters enemy missiles flying toward us in midair."
         ></p>
-
-
-
         <video autoplay muted loop controls playsinline preload="metadata">
-         <source src="/assets/popup3_2-DJk20La_.mp4" type="video/mp4" />
-         </video>
+          <source src="/assets/popup3_2-DJk20La_.mp4" type="video/mp4" />
+        </video>
         <p
           data-ko="방위사업청의 기술력이 집약된 정조대왕함은 적의 탄도미사일을 탐지 → 추적 → 요격까지 혼자서 완벽하게 다 해낼 수 있는 진정한 의미의 방패입니다."
           data-en="The ROKS Jeongjo the Great, which embodies the Defense Acquisition Program Administration's advanced technology, is a shield in the truest sense, capable of flawlessly detecting → tracking → intercepting enemy ballistic missiles all on its own."
@@ -359,11 +326,13 @@
           data-ko="정조대왕함 한 척만 있어도 그 주변은 안전합니다."
           data-en="With just one Aegis destroyer, the surrounding area can be protected almost completely."
         ></h3>
+        <video autoplay muted loop controls playsinline preload="metadata">
+          <source src="/assets/popup3_3-KEkh0V5t.mp4" type="video/mp4" />
+        </video>
         <p
-          data-ko="게다가 이 방패는 나 혼자만 쓰는 게 아닙니다. 이지스함 한 척이 떠 있으면, 그 주변 수백 킬로미터 바다 위에 떠 있는 우리 편의 다른 군함들, 보급선, 심지어 근처 육지의 주요 시설까지 보호해 줄 수 있습니다."
+          data-ko="이 방패는 나 혼자만 쓰는 게 아닙니다. 이지스함 한 척이 떠 있으면, 그 주변 수백 킬로미터 바다 위에 떠 있는 우리 편의 다른 군함들, 보급선, 심지어 근처 육지의 주요 시설까지 보호해 줄 수 있습니다."
           data-en="This shield is not just for our ship. When a single Aegis destroyer is deployed, it can protect other friendly warships, supply ships, and even key facilities on nearby land across hundreds of kilometers of the surrounding sea."
         ></p>
-
       </template>
 
       <template id="trigger-template-4">
@@ -371,7 +340,6 @@
           data-ko="근데 아까 그 미사일은 어디서 어떻게 발사됐냐고요?"
           data-en="But where did that missile come from, and how was it launched?"
         ></h3>
-
 
         <p
           data-ko="과거의 군함들은 대포나 미사일을 쏠 때 갑판 위에 있는 발사대를 빙글빙글 돌려서 적을 조준해야 했습니다."
@@ -383,9 +351,7 @@
         ></p>
 
         <div class="feature-media">
-          <img
-            src="/assets/popup4_1-BKSjkJXz.jpg"
-          />
+          <img src="/assets/popup4_1-BKSjkJXz.jpg" />
         </div>
 
         <br />
@@ -404,8 +370,6 @@
           data-ko=" 그래서 방위사업청은 우리 기술로 KVLS를 개발해냈고 이제는 전세계에서 가장 거대하고 강력한 최신형 KVLS-II를 최초로 정조대왕함에 탑재했습니다!"
           data-en="That is why the Defense Acquisition Program Administration developed the KVLS using our own technology, and now the world's largest and most powerful latest-generation KVLS-II has been installed aboard the ROKS Jeongjo the Great for the first time!"
         ></p>
-
-
       </template>
 
       <template id="trigger-template-5">
@@ -428,10 +392,8 @@
           data-ko="대신 소리는 물속에서 아주 멀리까지 빠르게 전달됩니다. 그래서 음파탐지기(소나, SONAR)를 사용하는데요, 박쥐가 초음파를 쏴서 먹이를 찾는 것처럼 물속으로 소리를 보낸 뒤, 그 소리가 잠수함이나 어뢰에 부딪혀 반사되어 돌아오는 메아리를 듣고 적의 위치와 거리를 알아내는 장비입니다."
           data-en="Sound, however, travels quickly over great distances underwater. Sonar sends sound waves through the water like a bat using ultrasound to find prey, then listens for echoes reflected from submarines or torpedoes to determine the enemy's position and distance."
         ></p>
-       <div class="feature-media">
-          <img
-            src="/assets/popup5_1-DeER4HB1.jpg"
-          />
+        <div class="feature-media">
+          <img src="/assets/popup5_1-DeER4HB1.jpg" />
         </div>
         <h3
           data-ko="'바닷속의 유령' 잠수함을 잡으려면 우리도 소리를 죽여야 합니다."
@@ -442,12 +404,11 @@
           data-en="Submarines can find us only by sound, too."
         ></p>
 
-
         <p
           data-ko="보통 정조대왕함 같은 거대한 구축함은 엄청난 속도를 내기 위해 전투기 엔진 같은 '가스터빈'을 돌립니다. 하지만 이 엔진은 소음이 너무 커서, 물속에 있는 적 잠수함에게 '나 여기 지나간다!'라고 광고하는 꼴이 되죠."
           data-en="Large destroyers like the ROKS Jeongjo the Great normally run 'gas turbines,' similar to fighter jet engines, to achieve tremendous speed. But these engines are so loud that it is like announcing 'I'm passing right here!' to enemy submarines underwater."
         ></p>
-                <h3
+        <h3
           data-ko=" 정조대왕함은 바다 위를 유령보다 조용히 이동할 수 있습니다."
           data-en="The ROKS Jeongjo the Great can move across the sea more quietly than a 'ghost.'"
         ></h3>
@@ -455,8 +416,6 @@
           data-ko="그래서 HED라는 마법의 스위치를 만들었습니다. 자동차로 치면 하이브리드 자동차가 저속에서는 조용한 전기 모터로 굴러가는 것과 똑같아요. 거대한 가스터빈 엔진이 꺼지고 전기 모터가 조용히 돌기 시작하면서 함정의 소음이 극적으로 줄어듭니다."
           data-en="That is why we created a magic switch called HED. It works just like a hybrid car running on a quiet electric motor at low speeds. The massive gas turbine engines shut down and the electric motors begin turning quietly, dramatically reducing the ship's noise."
         ></p>
-
-
       </template>
 
       <template id="completion-template">
