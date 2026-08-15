@@ -1,5 +1,5 @@
 export const state = {
-  language: null,
+  language: "ko",
   assetsReady: false,
   startRequested: false,
   gameStarted: false,

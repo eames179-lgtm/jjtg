@@ -11,7 +11,6 @@ export const dom = {
   loadingTrack: $(".loading-track"),
   loadingActions: $("#loading-actions"),
   hud: $("#hud"),
-  languageToggle: $("#language-toggle"),
   anchorProgress: $("#anchor-progress"),
   anchorImages: [...document.querySelectorAll("#anchor-progress img")],
   helm: $("#helm"),

@@ -17,8 +17,8 @@
         }
       }
     </script>
-    <script type="module" crossorigin src="/assets/index-CYKhI23F.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-EN1tleM7.css">
+    <script type="module" crossorigin src="/assets/index-DOFEZgEd.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BgBdENAW.css">
   </head>
   <body>
     <main id="game" aria-label="Ocean research game">
@@ -86,11 +86,26 @@
           >
             <br />
             <!-- 1. 언어 선택 버튼 2개를 하나의 상자(div)에 가지런히 모아둡니다 -->
-            <div class="language-buttons" aria-label="Language selection">
-              <button type="button" class="language-button" data-language="ko">
+            <div
+              class="language-buttons"
+              aria-label="Language selection"
+              aria-hidden="true"
+              inert
+            >
+              <button
+                type="button"
+                class="language-button"
+                data-language="ko"
+                disabled
+              >
                 한국어 <span>KR</span>
               </button>
-              <button type="button" class="language-button" data-language="en">
+              <button
+                type="button"
+                class="language-button"
+                data-language="en"
+                disabled
+              >
                 English <span>EN</span>
               </button>
             </div>
@@ -100,7 +115,6 @@
               type="button"
               id="start-voyage-button"
               class="start-button"
-              disabled
             >
               항해 시작
             </button>
@@ -124,14 +138,6 @@
             <li><img src="data:image/png;base64,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" alt="미확인 연구 기록" /></li>
             <li><img src="data:image/png;base64,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" alt="미확인 연구 기록" /></li>
           </ol>
-          <button
-            id="language-toggle"
-            class="language-toggle"
-            type="button"
-            aria-label="Switch language"
-          >
-            EN
-          </button>
         </header>
 
         <div id="danger-warning" class="danger-warning is-hidden" role="alert">
@@ -286,7 +292,7 @@
         </div>
 
         <p
-          data-ko="배의 네 면에 찰싹 붙어있는 커다란 팔각형 모양의 레이더(SPY 레이더)와 아주 똑똑한 슈퍼컴퓨터, 그리고 미사일 발사대가 하나로 연결되어 움직이는 시스템을 말합니다."
+          data-ko="배의 네 면에 붙어있는 커다란 팔각형 모양의 레이더(SPY 레이더)와 슈퍼컴퓨터, 그리고 미사일 발사대가 하나로 연결되어 움직이는 시스템을 말합니다."
           data-en="It is a system in which the large octagonal radars (SPY radars) mounted on all four sides of the ship, a highly intelligent supercomputer, and the missile launchers are all connected and operate as one."
         ></p>
 
@@ -298,7 +304,7 @@
           <source src="/assets/popup2_4-BfZy8jqW.mp4" type="video/mp4" />
         </video>
         <p
-          data-ko="이지스함의 거대한 레이더는 빙글빙글 돌아갈 필요 없이 사방을 동시에 감시합니다. 수백 킬로미터 밖에 있는 적 비행기나 미사일 수백 개를 동시에 찾아내고 쫓아갈 수 있습니다."
+          data-ko="이지스함의 레이더는 빙글빙글 돌아가며 빔을 쏘고 사각지대가 발생하던 구형 레이더와 달리 사방을 동시에 감시합니다. 수백 킬로미터 밖에 있는 적 비행기나 미사일 수백 개를 동시에 찾아내고 추격할 수 있습니다."
           data-en="An Aegis destroyer's massive radar monitors every direction at once without needing to spin. It can detect and track hundreds of enemy aircraft or missiles simultaneously from hundreds of kilometers away."
         ></p>
       </template>
@@ -309,17 +315,17 @@
           data-en="Launching an interceptor missile!"
         ></h3>
         <video autoplay muted loop controls playsinline preload="metadata">
-          <source src="/assets/popup3_1-BJOg1wos.mp4" type="video/mp4" />
+          <source src="/assets/popup3_1-DRMszOL9.mp4" type="video/mp4" />
         </video>
         <p
-          data-ko="정말 위험한 상황이었습니다! 우리를 향해 날아오는 적의 미사일을 공중에서 산산조각 내는 방패, 바로 '함대공 요격 미사일'을 발사한 덕분에 무사할 수 있는거죠."
+          data-ko="정말 위험한 상황이었습니다! 우리를 향해 날아오는 적의 미사일을 공중에서 산산조각 내는 '함대공 요격 미사일'을 발사한 덕분에 무사할 수 있었습니다."
           data-en="Captain, this is a truly dangerous situation! We survived thanks to the 'surface-to-air interceptor missile'—a shield that shatters enemy missiles flying toward us in midair."
         ></p>
         <video autoplay muted loop controls playsinline preload="metadata">
           <source src="/assets/popup3_2-DJk20La_.mp4" type="video/mp4" />
         </video>
         <p
-          data-ko="방위사업청의 기술력이 집약된 정조대왕함은 적의 탄도미사일을 탐지 → 추적 → 요격까지 혼자서 완벽하게 다 해낼 수 있는 진정한 의미의 방패입니다."
+          data-ko="정조대왕함은 이 전의 구축함들과 달리 적의 탄도미사일을 탐지 → 추적 → 요격까지 완벽하게 다 해낼 수 있습니다."
           data-en="The ROKS Jeongjo the Great, which embodies the Defense Acquisition Program Administration's advanced technology, is a shield in the truest sense, capable of flawlessly detecting → tracking → intercepting enemy ballistic missiles all on its own."
         ></p>
         <h3
@@ -330,46 +336,45 @@
           <source src="/assets/popup3_3-KEkh0V5t.mp4" type="video/mp4" />
         </video>
         <p
-          data-ko="이 방패는 나 혼자만 쓰는 게 아닙니다. 이지스함 한 척이 떠 있으면, 그 주변 수백 킬로미터 바다 위에 떠 있는 우리 편의 다른 군함들, 보급선, 심지어 근처 육지의 주요 시설까지 보호해 줄 수 있습니다."
+          data-ko="이 요격 시스템은 나 혼자만 쓰는 게 아닙니다. 정조대왕함 한 척이 떠 있으면, 그 주변 수백 킬로미터 바다 위에 떠 있는 우리 편의 다른 군함들, 보급선, 심지어 근처 육지의 주요 시설까지 보호해 줄 수 있습니다."
           data-en="This shield is not just for our ship. When a single Aegis destroyer is deployed, it can protect other friendly warships, supply ships, and even key facilities on nearby land across hundreds of kilometers of the surrounding sea."
         ></p>
       </template>
 
       <template id="trigger-template-4">
         <h3
-          data-ko="근데 아까 그 미사일은 어디서 어떻게 발사됐냐고요?"
+          data-ko="미사일은 갑판 아래에 있었습니다."
           data-en="But where did that missile come from, and how was it launched?"
         ></h3>
-
+        <video autoplay muted loop controls playsinline preload="metadata">
+          <source src="/assets/popup3_1-DRMszOL9.mp4" type="video/mp4" />
+        </video>
         <p
-          data-ko="과거의 군함들은 대포나 미사일을 쏠 때 갑판 위에 있는 발사대를 빙글빙글 돌려서 적을 조준해야 했습니다."
-          data-en="In the past, warships had to rotate launchers mounted on the deck to aim at the enemy before firing guns or missiles."
-        ></p>
-        <p
-          data-ko="하지만 수직발사체계(VLS)는 미사일들을 배의 갑판 아래 네모난 방(셀, Cell)에 수직으로 세워서 보관합니다. 적이 나타나면 뚜껑만 열고 곧바로 하늘 위로 쏘아 올린 다음, 미사일 스스로 방향을 틀어 날아가게 하는 최첨단 시스템입니다."
+          data-ko="한국형수직발사체계(KVLS)는 미사일들을 배의 갑판 아래 네모난 방(셀, Cell)에 수직으로 세워서 보관합니다. 적이 나타나면 뚜껑만 열고 곧바로 하늘 위로 쏘아 올린 다음, 미사일 스스로 방향을 틀어 날아가게 하는 최첨단 국산 시스템입니다."
           data-en="The Vertical Launching System (VLS), however, stores missiles upright in square compartments called cells beneath the ship's deck. When an enemy appears, the system simply opens a hatch and launches a missile straight into the sky; the missile then changes direction on its own and flies toward its target."
         ></p>
-
-        <div class="feature-media">
-          <img src="/assets/popup4_1-BKSjkJXz.jpg" />
-        </div>
 
         <br />
 
         <h3
-          data-ko="우리는 수직발사체계를 직접 개발했습니다."
+          data-ko="더 크고 더 강하게! KVLS-II"
           data-en="We developed our own Vertical Launching System."
         ></h3>
-
+        <div class="feature-media">
+          <img src="/assets/popup4_1-Gcw9stVs.webp" />
+        </div>
         <p
-          data-ko="원래 우리나라 해군은 미국의 'Mk.41'이라는 훌륭한 수직발사체계를 수입해서 썼습니다. 하지만 수입산 무기를 쓸 때는 까다로운 국제 계약 절차나 해외 기술 통제로 인해 우리 국산 무기를 마음대로 연동하거나 유지보수하기가 매우 어려웠습니다."
+          data-ko="기존의 KVLS로는 수용하기 어려운 더 크고 강력한 미사일을 탑재하기 위해 KVLS-II가 개발됐습니다. 또한 특정 셀에 정해진 무기만 넣는 방식에서 벗어나, 작전 목적에 따라 필요한 무기를 자유롭게 장착할 수 있도록 설계하여 전술적 유연성과 효율성이 크게 향상되었습니다"
           data-en="The Republic of Korea Navy originally imported and used the excellent American Mk 41 Vertical Launching System. With imported weapons, however, complex international contracting procedures and foreign technology controls made it extremely difficult to freely integrate our own weapons or perform maintenance."
         ></p>
 
-        <p
-          data-ko=" 그래서 방위사업청은 우리 기술로 KVLS를 개발해냈고 이제는 전세계에서 가장 거대하고 강력한 최신형 KVLS-II를 최초로 정조대왕함에 탑재했습니다!"
-          data-en="That is why the Defense Acquisition Program Administration developed the KVLS using our own technology, and now the world's largest and most powerful latest-generation KVLS-II has been installed aboard the ROKS Jeongjo the Great for the first time!"
-        ></p>
+        <h3
+          data-ko="바로 정조대왕함부터 KVLS-II가 탑재됩니다."
+          data-en="We developed our own Vertical Launching System."
+        ></h3>
+        <video autoplay muted loop controls playsinline preload="metadata">
+          <source src="/assets/popup3_3-KEkh0V5t.mp4" type="video/mp4" />
+        </video>
       </template>
 
       <template id="trigger-template-5">
@@ -387,51 +392,41 @@
           data-ko="바닷속의 잠수함을 찾는 건, 정말 '유령'을 찾는 것과 같습니다. 바닷속은 빛이 거의 통과하지 못해서 아무리 좋은 카메라나 레이더가 있어도 앞을 볼 수 없거든요"
           data-en="Finding a submarine underwater is truly like searching for a 'ghost.' Almost no light penetrates the depths, so even the best cameras or radar cannot see what lies ahead."
         ></p>
-
+        <video autoplay muted loop controls playsinline preload="metadata">
+          <source src="/assets/popup5_1-Dyqw1AWX.mp4" type="video/mp4" />
+        </video>
         <p
-          data-ko="대신 소리는 물속에서 아주 멀리까지 빠르게 전달됩니다. 그래서 음파탐지기(소나, SONAR)를 사용하는데요, 박쥐가 초음파를 쏴서 먹이를 찾는 것처럼 물속으로 소리를 보낸 뒤, 그 소리가 잠수함이나 어뢰에 부딪혀 반사되어 돌아오는 메아리를 듣고 적의 위치와 거리를 알아내는 장비입니다."
+          data-ko="대신 소리는 물속에서 아주 멀리까지 빠르게 전달됩니다. 그래서 음파탐지기(소나, SONAR)를 사용하는데요, 물속으로 소리를 보낸 뒤, 그 소리가 잠수함이나 어뢰에 부딪혀 반사되어 돌아오는 메아리를 듣고 적의 위치와 거리를 알아내는 장비입니다."
           data-en="Sound, however, travels quickly over great distances underwater. Sonar sends sound waves through the water like a bat using ultrasound to find prey, then listens for echoes reflected from submarines or torpedoes to determine the enemy's position and distance."
         ></p>
-        <div class="feature-media">
-          <img src="/assets/popup5_1-DeER4HB1.jpg" />
-        </div>
+
         <h3
-          data-ko="'바닷속의 유령' 잠수함을 잡으려면 우리도 소리를 죽여야 합니다."
+          data-ko="정조대왕함의 소나는 더 정밀해졌습니다."
           data-en="To catch these underwater 'ghost' submarines, we must silence ourselves as well."
         ></h3>
+        <video autoplay muted loop controls playsinline preload="metadata">
+          <source src="/assets/popup5_2-CUq2bzRi.mp4" type="video/mp4" />
+        </video>
         <p
-          data-ko=" 잠수함도 우릴 음파탐지기(SONAR)를 이용해 소리로 찾거든요."
+          data-ko="정조대왕함은 국내 독자 개발한 통합소나체계를 통해 선체고정소나와 예인소나의 정보를 하나로 융합합니다. 기존 세종대왕급보다 잠수함 탐지거리를 3배 이상 향상시키고 저소음 전기추진체계를 적용해, 수중 위협을 빠르고 정밀하게 탐지·추적할 수 있습니다."
           data-en="Submarines can find us only by sound, too."
-        ></p>
-
-        <p
-          data-ko="보통 정조대왕함 같은 거대한 구축함은 엄청난 속도를 내기 위해 전투기 엔진 같은 '가스터빈'을 돌립니다. 하지만 이 엔진은 소음이 너무 커서, 물속에 있는 적 잠수함에게 '나 여기 지나간다!'라고 광고하는 꼴이 되죠."
-          data-en="Large destroyers like the ROKS Jeongjo the Great normally run 'gas turbines,' similar to fighter jet engines, to achieve tremendous speed. But these engines are so loud that it is like announcing 'I'm passing right here!' to enemy submarines underwater."
-        ></p>
-        <h3
-          data-ko=" 정조대왕함은 바다 위를 유령보다 조용히 이동할 수 있습니다."
-          data-en="The ROKS Jeongjo the Great can move across the sea more quietly than a 'ghost.'"
-        ></h3>
-        <p
-          data-ko="그래서 HED라는 마법의 스위치를 만들었습니다. 자동차로 치면 하이브리드 자동차가 저속에서는 조용한 전기 모터로 굴러가는 것과 똑같아요. 거대한 가스터빈 엔진이 꺼지고 전기 모터가 조용히 돌기 시작하면서 함정의 소음이 극적으로 줄어듭니다."
-          data-en="That is why we created a magic switch called HED. It works just like a hybrid car running on a quiet electric motor at low speeds. The massive gas turbine engines shut down and the electric motors begin turning quietly, dramatically reducing the ship's noise."
         ></p>
       </template>
 
       <template id="completion-template">
         <h3
-          data-ko="기억이 전부 돌아오셨다고요?"
+          data-ko="끝까지 함께해주셔서 감사합니다."
           data-en="You remember everything now?"
         ></h3>
         <p
-          data-ko="역시 잠깐 깜빡하신 것이었군요. 간만에 아는 것들 설명하느라 시간 가는 줄 몰랐는데!"
+          data-ko="설문조사에 참여해주시면 추첨을 통해 소정의 경품을 발송드립니다."
           data-en="I was just starting to get attached! It's a shame, but I must be going now."
         ></p>
 
         <br />
 
         <h4
-          data-ko="다시 조타륜을 꽉 잡아주세요. 대한민국의 찬란한 바다를 향해, 전진!"
+          data-ko="tEST"
           data-en="Take a firm grip on the helm once again. Toward the glorious seas of the Republic of Korea—full speed ahead!"
         ></h4>
         <!-- 실제 배포 시 href의 Google Form 주소만 교체하세요. 새 탭 열기는 target과 rel로 유지합니다. -->

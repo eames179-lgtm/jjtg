@@ -34,9 +34,6 @@ export function createUIController({
       });
     }
 
-    dom.languageToggle.addEventListener("click", () =>
-      selectLanguage(state.language === "ko" ? "en" : "ko"),
-    );
     dom.popupClose.addEventListener("click", closePopup);
     bindPopupDrag();
     dom.emergencyButton.addEventListener("click", neutralizeThreat);
@@ -141,7 +138,6 @@ export function createUIController({
     dom.dangerCode.textContent = text.dangerCode;
     dom.dangerText.textContent = text.danger;
     dom.emergencyLabel.textContent = text.emergency;
-    dom.languageToggle.textContent = state.language === "ko" ? "EN" : "KR";
     if (activeHelmGuide) {
       dom.helmGuideText.textContent = text[activeHelmGuide];
     }
