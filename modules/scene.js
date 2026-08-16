@@ -89,7 +89,7 @@ function buildSky(scene, renderer) {
     environmentRenderTarget = nextEnvironmentRenderTarget;
   }
 
-  setSky({ elevation: 60, azimuth: 100, environmentIntensity: 0.5 });
+  setSky({ elevation: 80, azimuth: 100, environmentIntensity: 0.8 });
 
   return { sun, setSky };
 }
