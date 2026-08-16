@@ -1076,11 +1076,12 @@ button {
   font-size: 20px;
 }
 .report-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
+  width: fit-content;
   min-height: 50px;
-  margin-top: 16px;
+  margin: 16px auto 0;
   padding: 0 22px;
   color: var(--navy);
   background: var(--cyan);

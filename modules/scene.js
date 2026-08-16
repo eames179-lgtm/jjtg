@@ -43,7 +43,7 @@ export function createScene(canvas) {
   controls.target.set(0, 0, -145);
   controls.update();
 
-  const sun = buildSky(scene, renderer);
+  const { sun, setSky } = buildSky(scene, renderer);
   sunLight.position.copy(sun);
   addSkyDetails(scene);
 
@@ -54,6 +54,10 @@ export function createScene(canvas) {
     controls,
     clock: new THREE.Clock(false),
     sun,
+    setSky(settings) {
+      setSky(settings);
+      sunLight.position.copy(sun);
+    },
   };
 }
 
@@ -69,18 +73,25 @@ function buildSky(scene, renderer) {
   skyUniforms.mieCoefficient.value = 0.005;
   skyUniforms.mieDirectionalG.value = 0.8;
 
-  const elevation = 60;
-  const azimuth = 50;
-  const phi = THREE.MathUtils.degToRad(90 - elevation);
-  const theta = THREE.MathUtils.degToRad(azimuth);
-  sun.setFromSphericalCoords(1, phi, theta);
-
-  sky.material.uniforms.sunPosition.value.copy(sun);
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmremGenerator.fromScene(sky).texture;
-  scene.environmentIntensity = 0.5;
+  let environmentRenderTarget;
 
-  return sun;
+  function setSky({ elevation, azimuth, environmentIntensity }) {
+    const phi = THREE.MathUtils.degToRad(90 - elevation);
+    const theta = THREE.MathUtils.degToRad(azimuth);
+    sun.setFromSphericalCoords(1, phi, theta);
+
+    sky.material.uniforms.sunPosition.value.copy(sun);
+    const nextEnvironmentRenderTarget = pmremGenerator.fromScene(sky);
+    scene.environment = nextEnvironmentRenderTarget.texture;
+    scene.environmentIntensity = environmentIntensity;
+    environmentRenderTarget?.dispose();
+    environmentRenderTarget = nextEnvironmentRenderTarget;
+  }
+
+  setSky({ elevation: 60, azimuth: 100, environmentIntensity: 0.5 });
+
+  return { sun, setSky };
 }
 
 function addSkyDetails(scene) {

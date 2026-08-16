@@ -9,7 +9,7 @@ import { state } from "./modules/state.js";
 import { createUIController } from "./modules/ui.js";
 import { createWakeSystem } from "./modules/wake.js";
 
-const { scene, camera, renderer, controls, clock, sun } = createScene(
+const { scene, camera, renderer, controls, clock, sun, setSky } = createScene(
   dom.canvas,
 );
 const audio = createAudioController(state);
@@ -26,6 +26,8 @@ let playerStartInitialized = false;
 let playerBaseY = -2.5;
 let openingStarted = false;
 let openingFinished = false;
+let activePopupIndex = null;
+let fifthPopupSkyChanged = false;
 
 const triggers = new Map();
 const colliders = [];
@@ -465,10 +467,7 @@ function collectItem(index) {
 
   if (state.itemCount === 5 && !state.completionShown) {
     state.completionShown = true;
-    window.setTimeout(() => {
-      if (state.popupOpen || state.alarmActive) state.completionPending = true;
-      else openCompletionPopup();
-    }, 1150);
+    state.completionPending = true;
   }
 }
 
@@ -495,6 +494,12 @@ function openPopup(index) {
   const template = $(`#trigger-template-${index}`);
   if (!template) return false;
 
+  activePopupIndex = index;
+  if (index === 5 && !fifthPopupSkyChanged) {
+    fifthPopupSkyChanged = true;
+    setSky({ elevation: -1, azimuth: -130, environmentIntensity: 100 });
+    water?.material.uniforms.sunDirection.value.copy(sun).normalize();
+  }
   markTriggerPopupOpened(index);
   state.popupOpen = true;
   setSailing(false);
@@ -545,6 +550,7 @@ function advanceMapAnchor(currentTriggerIndex) {
 }
 
 function openCompletionPopup() {
+  activePopupIndex = null;
   state.popupOpen = true;
   setSailing(false);
   dom.popupKicker.textContent = copy[state.language].completeKicker;
@@ -559,6 +565,8 @@ function openCompletionPopup() {
 
 function closePopup() {
   if (!state.popupOpen) return;
+  const closedPopupIndex = activePopupIndex;
+  activePopupIndex = null;
   state.popupOpen = false;
   dom.popupBackdrop.classList.remove("is-open");
   dom.popupBackdrop.classList.add("is-closing");
@@ -576,9 +584,9 @@ function closePopup() {
     dom.popupPanel.style.removeProperty("--popup-drag-y");
     dom.popupBackdrop.setAttribute("aria-hidden", "true");
 
-    if (state.completionPending) {
+    if (closedPopupIndex === 5 && state.completionPending) {
       state.completionPending = false;
-      window.setTimeout(openCompletionPopup, 180);
+      window.setTimeout(openCompletionPopup, 1730);
     } else {
       setSailing(true);
     }

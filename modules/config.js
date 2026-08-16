@@ -24,8 +24,8 @@ export const copy = {
       "한국형수직발사체계",
       "유령 사냥",
     ],
-    completeKicker: "끝",
-    completeTitle: "임무 완료",
+    completeKicker: "노을이 아름답다.",
+    completeTitle: "항해 완료",
   },
   en: {
     loading: (n) => `LOADING EXPEDITION DATA · ${n}%`,
