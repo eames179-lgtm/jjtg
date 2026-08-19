@@ -8,7 +8,7 @@ export const copy = {
     helmGuideStop: "조타륜 가운데 파란 점을 탭하면 정박합니다.",
     close: "닫기",
     dangerCode: "접근 경보 · 위험 단계",
-    danger: "대함 미사일이 접근하고 있습니다.",
+    danger: "??? 미사일이 접근하고 있습니다.",
     emergency: "요격 미사일 발사",
     popupKickers: [
       "전설의 시작",

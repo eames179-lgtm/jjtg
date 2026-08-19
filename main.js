@@ -185,11 +185,12 @@ function initializePlayerStart() {
   player.updateMatrixWorld(true);
   previousPlayerPosition.copy(player.position);
 
-  const cameraOffset = new THREE.Vector3(0, 53, -77).applyQuaternion(
+  // Match the opening silhouette: show the starboard profile with the bow left.
+  const cameraOffset = new THREE.Vector3(102, 17, 0).applyQuaternion(
     player.quaternion,
   );
   camera.position.copy(player.position).add(cameraOffset);
-  controls.target.copy(player.position).add(new THREE.Vector3(0, 3, 0));
+  controls.target.copy(player.position).add(new THREE.Vector3(0, 4, 0));
   controls.update();
   playerStartInitialized = true;
 }
@@ -566,6 +567,7 @@ function openCompletionPopup() {
 function closePopup() {
   if (!state.popupOpen) return;
   const closedPopupIndex = activePopupIndex;
+  const isCompletionPopup = closedPopupIndex === null;
   activePopupIndex = null;
   state.popupOpen = false;
   dom.popupBackdrop.classList.remove("is-open");
@@ -588,7 +590,7 @@ function closePopup() {
       state.completionPending = false;
       window.setTimeout(openCompletionPopup, 1730);
     } else {
-      setSailing(true);
+      setSailing(!isCompletionPopup);
     }
   }, 360);
 }
