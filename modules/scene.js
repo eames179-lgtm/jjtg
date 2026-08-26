@@ -129,7 +129,7 @@ export function createOcean(scene, sun, normals) {
     sunDirection: sun.clone().normalize(),
     sunColor: 0xffffff,
     waterColor: 0x001e0f,
-    distortionScale: 3.7,
+    distortionScale: 1.5,
     fog: scene.fog !== undefined,
   });
   water.rotation.x = -Math.PI / 2;
