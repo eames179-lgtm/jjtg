@@ -368,7 +368,7 @@ function animate() {
 
   updateFollowingCamera(dt);
   controls.update();
-  water.material.uniforms.time.value += dt * 0.55;
+  water.material.uniforms.time.value += dt * 0.3;
   wakeSystem.update(player, state.currentSpeed, state.elapsed);
   pickupEffects.update(dt);
   checkTriggers();
