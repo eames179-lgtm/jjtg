@@ -374,9 +374,6 @@ function animate() {
   checkTriggers();
   renderer.render(scene, camera);
   updateCompass();
-
-  controls.update();
-  water.material.uniforms.time.value += dt * 0.55;
 }
 
 function updateCompass() {
