@@ -1,29 +1,36 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { createAudioController } from "./modules/audio.js";
-import { ANCHOR_ROTATION_SPEED, copy } from "./modules/config.js";
+import {
+  ANCHOR_ROTATION_SPEED,
+  BUOYANCY_STRENGTH,
+  copy,
+} from "./modules/config.js";
 import { $, dom } from "./modules/dom.js";
 import { createPickupEffectSystem } from "./modules/effects.js";
 import { createOcean, createScene, resizeScene } from "./modules/scene.js";
 import { state } from "./modules/state.js";
 import { createUIController } from "./modules/ui.js";
 import { createWakeSystem } from "./modules/wake.js";
+import { createHullFoamSystem } from "./modules/hull-foam.js";
+import { sampleOceanHeight } from "./modules/ocean.js";
 
-const { scene, camera, renderer, controls, clock, sun, setSky } = createScene(
+const { scene, camera, renderer, controls, clock, sun, setSky, prepareModel } = createScene(
   dom.canvas,
 );
 const audio = createAudioController(state);
 const wakeSystem = createWakeSystem(scene);
+const hullFoam = createHullFoamSystem(scene);
 const pickupEffects = createPickupEffectSystem(scene);
 
 let water;
 let player;
+let vesselVisual;
 let playerBox;
 let mapAnchor;
 let mapStart;
 let mapSceneReady = false;
 let playerStartInitialized = false;
-let playerBaseY = -2.5;
 let openingStarted = false;
 let openingFinished = false;
 let activePopupIndex = null;
@@ -93,17 +100,22 @@ function loadAssets() {
   const textureLoader = new THREE.TextureLoader(loadingManager);
   const normals = textureLoader.load("./waternormals.jpg", (texture) => {
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.colorSpace = THREE.NoColorSpace;
+    texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   });
   const wakeFoam = textureLoader.load("./wake_foam.png", (texture) => {
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
     texture.colorSpace = THREE.NoColorSpace;
+    texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   });
 
-  water = createOcean(scene, sun, normals);
+  water = createOcean(scene, sun, normals, wakeFoam, renderer);
   wakeSystem.create(wakeFoam);
+  hullFoam.create(wakeFoam);
 
   const loader = new GLTFLoader(loadingManager);
   loader.load("./map.glb", ({ scene: mapScene }) => {
+    prepareModel(mapScene);
     scene.add(mapScene);
     mapScene.updateMatrixWorld(true);
     mapScene.traverse((object) => {
@@ -146,14 +158,16 @@ function loadAssets() {
   });
 
   loader.load("./player.glb", ({ scene: playerScene }) => {
+    prepareModel(playerScene, { envMapIntensity: 0.55 });
     player = new THREE.Group();
     player.name = "Player";
-    player.add(playerScene);
+    vesselVisual = new THREE.Group();
+    player.add(vesselVisual);
+    vesselVisual.add(playerScene);
     playerScene.scale.setScalar(0.44);
     player.traverse((object) => {
       if (object.isMesh) {
         object.frustumCulled = true;
-        object.material.envMapIntensity = 0.55;
       }
     });
     scene.add(player);
@@ -175,14 +189,13 @@ function initializePlayerStart() {
 
   if (mapStart) {
     mapStart.getWorldPosition(player.position);
-    playerBaseY = player.position.y;
   } else {
     player.position.set(48, -2.5, -180);
-    playerBaseY = player.position.y;
   }
 
   player.rotation.set(0, -1.78, 0);
   player.updateMatrixWorld(true);
+  hullFoam.setVessel(vesselVisual);
   previousPlayerPosition.copy(player.position);
 
   // Match the opening silhouette: show the starboard profile with the bow left.
@@ -358,18 +371,39 @@ function animate() {
     player.position.add(moveVelocity);
   }
 
-  if (state.sailing) {
-    player.position.y = playerBaseY + Math.sin(state.elapsed * 1.9) * 0.14;
-    player.rotation.z = Math.sin(state.elapsed * 1.45) * 0.015;
-  } else {
-    player.position.y = playerBaseY + Math.sin(state.elapsed * 1.4) * 0.1;
-    player.rotation.z *= 0.92;
-  }
+  // Animate only the visual hull; steering and collision rays stay horizontal.
+  const x = player.position.x;
+  const z = player.position.z;
+  const heading = player.rotation.y;
+  const fx = Math.sin(heading);
+  const fz = Math.cos(heading);
+  const heightAt = (dx, dz) => sampleOceanHeight(x + dx, z + dz, state.elapsed);
+  const bow = heightAt(fx * 10, fz * 10);
+  const stern = heightAt(-fx * 10, -fz * 10);
+  const starboard = heightAt(fz * 4, -fx * 4);
+  const port = heightAt(-fz * 4, fx * 4);
+  const response = 1 - Math.exp(-dt * 2.5);
+  vesselVisual.position.y = THREE.MathUtils.lerp(
+    vesselVisual.position.y,
+    (bow + stern + starboard + port) * 0.25 * BUOYANCY_STRENGTH,
+    response,
+  );
+  vesselVisual.rotation.x = THREE.MathUtils.lerp(
+    vesselVisual.rotation.x,
+    -Math.atan2(bow - stern, 20) * BUOYANCY_STRENGTH,
+    response,
+  );
+  vesselVisual.rotation.z = THREE.MathUtils.lerp(
+    vesselVisual.rotation.z,
+    Math.atan2(starboard - port, 8) * BUOYANCY_STRENGTH,
+    response,
+  );
 
   updateFollowingCamera(dt);
   controls.update();
-  water.material.uniforms.time.value += dt * 0.3;
+  water.userData.update(state.elapsed, camera);
   wakeSystem.update(player, state.currentSpeed, state.elapsed);
+  hullFoam.update(state.currentSpeed, state.elapsed);
   pickupEffects.update(dt);
   checkTriggers();
   renderer.render(scene, camera);
@@ -495,7 +529,7 @@ function openPopup(index) {
   activePopupIndex = index;
   if (index === 5 && !fifthPopupSkyChanged) {
     fifthPopupSkyChanged = true;
-    setSky({ elevation: -1, azimuth: -130, environmentIntensity: 100 });
+    setSky({ elevation: 3, azimuth: -130, environmentIntensity: 0.75 });
     water?.material.uniforms.sunDirection.value.copy(sun).normalize();
   }
   markTriggerPopupOpened(index);

@@ -1,5 +1,8 @@
 import * as THREE from "three";
 import { WAKE } from "./config.js";
+import { oceanWaveGLSL } from "./ocean.js";
+import { createBowEffects } from "./bow.js";
+import { foamPatternGLSL } from "./foam-noise.js";
 
 export function createWakeSystem(scene) {
   const samples = [];
@@ -7,6 +10,7 @@ export function createWakeSystem(scene) {
   const right = new THREE.Vector3();
   const forward = new THREE.Vector3();
   let wake;
+  let bowEffects;
   let sternOffset = 7.0;
   let baseHalfWidth = 2.8;
 
@@ -16,21 +20,24 @@ export function createWakeSystem(scene) {
   }
 
   function create(foamTexture) {
-    const vertexCount = WAKE.maxSections * 2;
+    bowEffects = createBowEffects(scene, foamTexture);
+    const columns = 9;
+    const vertexCount = WAKE.maxSections * columns;
     const positions = new Float32Array(vertexCount * 3);
     const ages = new Float32Array(vertexCount);
     const across = new Float32Array(vertexCount);
     const strengths = new Float32Array(vertexCount);
-    const indices = new Uint16Array((WAKE.maxSections - 1) * 6);
+    const indices = new Uint16Array((WAKE.maxSections - 1) * (columns - 1) * 6);
 
     for (let i = 0; i < WAKE.maxSections; i++) {
-      across[i * 2] = -1;
-      across[i * 2 + 1] = 1;
+      for (let j = 0; j < columns; j++) across[i * columns + j] = j / (columns - 1) * 2 - 1;
     }
     for (let i = 0; i < WAKE.maxSections - 1; i++) {
-      const v = i * 2;
-      const o = i * 6;
-      indices.set([v, v + 1, v + 2, v + 1, v + 3, v + 2], o);
+      for (let j = 0; j < columns - 1; j++) {
+        const v = i * columns + j;
+        const o = (i * (columns - 1) + j) * 6;
+        indices.set([v, v + 1, v + columns, v + 1, v + columns + 1, v + columns], o);
+      }
     }
 
     const geometry = new THREE.BufferGeometry();
@@ -57,6 +64,8 @@ export function createWakeSystem(scene) {
         uFoamTexture: { value: foamTexture },
       },
       vertexShader: `
+        uniform float uTime;
+        ${oceanWaveGLSL}
         attribute float aAge;
         attribute float aAcross;
         attribute float aStrength;
@@ -67,6 +76,7 @@ export function createWakeSystem(scene) {
 
         void main() {
           vec4 world = modelMatrix * vec4(position, 1.0);
+          world.y += oceanField(world.xz, uTime).x;
           vAge = aAge;
           vAcross = aAcross;
           vStrength = aStrength;
@@ -83,18 +93,16 @@ export function createWakeSystem(scene) {
         varying float vStrength;
         varying vec2 vWorldXZ;
 
+        ${foamPatternGLSL}
         void main() {
           float lateral = abs(vAcross);
           float fadeTail = 1.0 - smoothstep(0.62, 1.0, vAge);
 
-          vec2 uvA = vWorldXZ * 0.07 + vec2(uTime * 0.1, -uTime * 0.018);
           mat2 rotateUV = mat2(0.80, -0.60, 0.60, 0.80);
-          vec2 uvB = rotateUV * vWorldXZ * 0.24
-                   + vec2(-uTime * 0.021, uTime * 0.014);
-          float foamA = texture2D(uFoamTexture, uvA).r;
-          float foamB = texture2D(uFoamTexture, uvB).r;
-          float foamTexture = smoothstep(0.05, 0.5, foamA * (0.58 + foamB));
-          float edgeNoise = mix(foamA, foamB, 0.5);
+          vec2 foam = foamPattern(uFoamTexture, rotateUV * vWorldXZ * 0.16
+            + vec2(-uTime * 0.045, uTime * 0.014), uTime);
+          float foamTexture = smoothstep(0.05, 0.5, foam.x) * mix(0.45, 1.2, foam.y);
+          float edgeNoise = foam.y;
           float edgeStart = mix(0.40, 0.62, edgeNoise);
 
           float fadeSides = 1.0 - smoothstep(edgeStart, 1.0, lateral);
@@ -114,7 +122,7 @@ export function createWakeSystem(scene) {
           );
           if (alpha < 0.025) discard;
 
-          vec3 color = mix(uFoamColor * 0.90, vec3(0.96, 1.0, 0.98), foamA);
+          vec3 color = mix(uFoamColor * 0.90, vec3(0.96, 1.0, 0.98), foam.x);
           gl_FragColor = vec4(color, alpha);
           #include <tonemapping_fragment>
           #include <colorspace_fragment>
@@ -136,6 +144,7 @@ export function createWakeSystem(scene) {
 
   function update(player, currentSpeed, elapsed) {
     if (!wake || !player) return;
+    bowEffects.update(player, currentSpeed, elapsed, sternOffset, baseHalfWidth);
 
     const speedRatio = THREE.MathUtils.clamp(currentSpeed / 26, 0, 1);
     forward
@@ -145,7 +154,7 @@ export function createWakeSystem(scene) {
       .normalize();
     stern
       .copy(player.position)
-      .addScaledVector(forward, sternOffset * 0.15)
+      .addScaledVector(forward, -sternOffset)
       .setY(WAKE.surfaceY);
 
     const newest = samples[samples.length - 1];
@@ -185,28 +194,20 @@ export function createWakeSystem(scene) {
       );
       right.set(sample.forward.z, 0, -sample.forward.x);
 
-      position.setXYZ(
-        i * 2,
-        sample.position.x - right.x * halfWidth,
-        WAKE.surfaceY,
-        sample.position.z - right.z * halfWidth,
-      );
-      position.setXYZ(
-        i * 2 + 1,
-        sample.position.x + right.x * halfWidth,
-        WAKE.surfaceY,
-        sample.position.z + right.z * halfWidth,
-      );
-      age.setX(i * 2, normalizedAge);
-      age.setX(i * 2 + 1, normalizedAge);
-      strength.setX(i * 2, sample.strength);
-      strength.setX(i * 2 + 1, sample.strength);
+      for (let j = 0; j < 9; j++) {
+        const offset = (j / 8 * 2 - 1) * halfWidth;
+        const vertex = i * 9 + j;
+        position.setXYZ(vertex, sample.position.x + right.x * offset, WAKE.surfaceY,
+          sample.position.z + right.z * offset);
+        age.setX(vertex, normalizedAge);
+        strength.setX(vertex, sample.strength);
+      }
     }
 
     position.needsUpdate = true;
     age.needsUpdate = true;
     strength.needsUpdate = true;
-    geometry.setDrawRange(0, Math.max(0, samples.length - 1) * 6);
+    geometry.setDrawRange(0, Math.max(0, samples.length - 1) * 8 * 6);
     wake.material.uniforms.uTime.value = elapsed;
   }
 

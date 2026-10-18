@@ -1,7 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { Water } from "three/addons/objects/Water.js";
 import { Sky } from "three/addons/objects/Sky.js";
+import { oceanQuality } from "./ocean.js";
+import { createModelMaterialAdapter, needsCompatibleLighting } from "./model-materials.js";
+export { createOcean } from "./ocean.js";
 
 export function createScene(canvas) {
   const scene = new THREE.Scene();
@@ -9,7 +11,7 @@ export function createScene(canvas) {
     43,
     innerWidth / innerHeight,
     0.25,
-    1000,
+    12000,
   );
   camera.position.set(54, 58, 64);
 
@@ -18,14 +20,17 @@ export function createScene(canvas) {
     antialias: devicePixelRatio <= 2,
     powerPreference: "high-performance",
   });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, oceanQuality.pixelRatio));
   renderer.setSize(innerWidth, innerHeight, false);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.13;
+  renderer.toneMappingExposure = 0.75;
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 0.6));
-  const sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
+  const compatibleLighting = needsCompatibleLighting(renderer);
+  scene.add(new THREE.HemisphereLight(
+    0xc5e6ff, 0x233c43, compatibleLighting ? 1.6 : 1.15,
+  ));
+  const sunLight = new THREE.DirectionalLight(0xffefd9, 2.4);
   scene.add(sunLight);
 
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -43,37 +48,47 @@ export function createScene(canvas) {
   controls.target.set(0, 0, -145);
   controls.update();
 
-  const { sun, setSky } = buildSky(scene, renderer);
+  const { sun, setSky } = buildSky(scene, renderer, compatibleLighting);
   sunLight.position.copy(sun);
-  addSkyDetails(scene);
 
   return {
     scene,
     camera,
     renderer,
     controls,
+    prepareModel: createModelMaterialAdapter(compatibleLighting),
     clock: new THREE.Clock(false),
     sun,
     setSky(settings) {
       setSky(settings);
       sunLight.position.copy(sun);
+      const daylight = THREE.MathUtils.smoothstep(sun.y, -0.06, 0.35);
+      sunLight.intensity = THREE.MathUtils.lerp(0.65, 2.4, daylight);
+      sunLight.color.set(daylight > 0.5 ? 0xffefd9 : 0xffab72);
     },
   };
 }
 
-function buildSky(scene, renderer) {
+function buildSky(scene, renderer, compatibleLighting) {
   const sun = new THREE.Vector3();
   const sky = new Sky();
   sky.scale.setScalar(10000);
+  // Keep the physical sky within the exposure used by the ship and sea.
+  sky.material.fragmentShader = sky.material.fragmentShader.replace(
+    "#include <tonemapping_fragment>",
+    "gl_FragColor.rgb *= 0.22;\n#include <tonemapping_fragment>",
+  );
   scene.add(sky);
 
   const skyUniforms = sky.material.uniforms;
-  skyUniforms.turbidity.value = 10;
-  skyUniforms.rayleigh.value = 1;
+  skyUniforms.turbidity.value = 3.5;
+  skyUniforms.rayleigh.value = 1.6;
   skyUniforms.mieCoefficient.value = 0.005;
   skyUniforms.mieDirectionalG.value = 0.8;
 
-  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+  // iOS uses direct/hemisphere lighting and Phong model materials. Skip the
+  // half-float environment render targets entirely, including at sunset.
+  const pmremGenerator = compatibleLighting ? null : new THREE.PMREMGenerator(renderer);
   let environmentRenderTarget;
 
   function setSky({ elevation, azimuth, environmentIntensity }) {
@@ -82,65 +97,32 @@ function buildSky(scene, renderer) {
     sun.setFromSphericalCoords(1, phi, theta);
 
     sky.material.uniforms.sunPosition.value.copy(sun);
-    const nextEnvironmentRenderTarget = pmremGenerator.fromScene(sky);
-    scene.environment = nextEnvironmentRenderTarget.texture;
     scene.environmentIntensity = environmentIntensity;
-    environmentRenderTarget?.dispose();
-    environmentRenderTarget = nextEnvironmentRenderTarget;
+    if (pmremGenerator) {
+      // The directional light supplies the sun. Exclude the extremely bright
+      // disc from the environment convolution to keep HDR samples bounded.
+      const showSunDisc = skyUniforms.showSunDisc.value;
+      skyUniforms.showSunDisc.value = false;
+      let nextEnvironmentRenderTarget;
+      try {
+        nextEnvironmentRenderTarget = pmremGenerator.fromScene(sky);
+      } finally {
+        skyUniforms.showSunDisc.value = showSunDisc;
+      }
+      scene.environment = nextEnvironmentRenderTarget.texture;
+      environmentRenderTarget?.dispose();
+      environmentRenderTarget = nextEnvironmentRenderTarget;
+    }
   }
 
-  setSky({ elevation: 80, azimuth: 100, environmentIntensity: 0.8 });
+  setSky({ elevation: 24, azimuth: 125, environmentIntensity: 0.85 });
 
   return { sun, setSky };
-}
-
-function addSkyDetails(scene) {
-  const geometry = new THREE.BufferGeometry();
-  const positions = [];
-  for (let i = 0; i < 80; i++) {
-    positions.push(
-      (Math.random() - 0.5) * 900,
-      65 + Math.random() * 170,
-      (Math.random() - 0.5) * 900,
-    );
-  }
-  geometry.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(positions, 3),
-  );
-  const points = new THREE.Points(
-    geometry,
-    new THREE.PointsMaterial({
-      color: 0xf5f5dc,
-      size: 1.15,
-      transparent: true,
-      opacity: 0.38,
-      sizeAttenuation: true,
-    }),
-  );
-  scene.add(points);
-}
-
-export function createOcean(scene, sun, normals) {
-  const water = new Water(new THREE.PlaneGeometry(10000, 10000), {
-    textureWidth: 512,
-    textureHeight: 512,
-    waterNormals: normals,
-    sunDirection: sun.clone().normalize(),
-    sunColor: 0xffffff,
-    waterColor: 0x001e0f,
-    distortionScale: 1.5,
-    fog: scene.fog !== undefined,
-  });
-  water.rotation.x = -Math.PI / 2;
-  water.position.y = 0;
-  scene.add(water);
-  return water;
 }
 
 export function resizeScene(camera, renderer) {
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, oceanQuality.pixelRatio));
   renderer.setSize(innerWidth, innerHeight, false);
 }

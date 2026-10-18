@@ -65,12 +65,32 @@ export const AUDIO_LEVELS = {
 
 export const AUDIO_UNLOCK_EVENTS = ["pointerdown", "keydown"];
 
+// 0 disables wave-driven hull motion; 1 uses the full sampled wave height/tilt.
+export const BUOYANCY_STRENGTH = 0.5;
+
+export const OCEAN_FOAM = {
+  amount: 0.1, // Visible foam intensity.
+  crestHeight: 0.52, // Minimum crest height in metres; lower creates more foam.
+  coverage: 0.55, // Patch coverage from 0 to 1.
+  driftSpeed: 0.35, // Base current speed in metres per second.
+  lifetime: 4.5, // Seconds for full-density foam to decay without new sources.
+  textureScale: 0.22, // Lower values produce larger bubble patterns.
+};
+
 export const WAKE = {
   maxSections: 120,
   sampleSpacing: 1.65,
   lifetime: 3.5,
   surfaceY: 0.12,
   maxHalfWidth: 12.5,
+};
+
+export const HULL_FOAM = {
+  width: 1,
+  idleOpacity: 0.9,
+  movingOpacity: 0.78,
+  surfaceY: 0.06,
+  segmentLength: 1,
 };
 
 export const ANCHOR_ROTATION_SPEED = (8 * Math.PI * 2) / 60;
